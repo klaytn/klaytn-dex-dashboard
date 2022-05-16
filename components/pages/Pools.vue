@@ -1,9 +1,10 @@
 <template>
-  <Swap></Swap>
+  <div>Pools page</div>
 </template>
 
 <script>
 export default {
-  name: "KlayPageSwap",
+  name: "PoolsPage"
 }
 </script>
+

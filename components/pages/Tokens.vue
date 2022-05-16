@@ -1,9 +1,10 @@
 <template>
-  <PagesOverview />
+  <div>Tokens Page</div>
 </template>
 
 <script>
 export default {
-  name: "Overview",
+  name: "TokensPage"
 }
 </script>
+

@@ -1,9 +1,9 @@
 <template>
-  <PagesOverview />
+  <PagesPools />
 </template>
 
 <script>
 export default {
-  name: "Overview",
+  name: "Pools",
 }
 </script>

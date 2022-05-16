@@ -6,6 +6,7 @@
       active-class="active"
       class="item"
       :to="it.link"
+      :exact="it.exact"
     >
       {{ it.label }}
     </NuxtLink>

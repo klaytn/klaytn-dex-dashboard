@@ -26,13 +26,18 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ["~/plugins/kaikas.js"],
+  plugins: ["~/plugins/element.js"],
+
+  router: {
+    mode: 'hash'
+  },
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: ["@nuxtjs/svg"],
+
   serverMiddleware: {
     "/api": "~/api",
   },
@@ -73,5 +78,13 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    loaders: {
+      scss: {
+        sassOptions: {
+          quietDeps: true
+        }
+      }
+    }
+  },
 }

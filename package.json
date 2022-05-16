@@ -19,6 +19,7 @@
     "bignumber.js": "^9.0.2",
     "core-js": "^3.19.3",
     "debounce": "^1.2.1",
+    "element-ui": "2.15.7",
     "express": "^4.17.3",
     "nuxt": "^2.15.8",
     "nuxt-sass-resources-loader": "^2.0.5",
