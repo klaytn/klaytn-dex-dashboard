@@ -23,6 +23,7 @@ export default {
     // SCSS file in the project
     "~assets/scss/main.css",
     "~assets/scss/vars.scss",
+    "~assets/scss/element.scss",
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -38,20 +39,25 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: ["@nuxtjs/svg"],
 
-  serverMiddleware: {
-    "/api": "~/api",
-  },
+  // serverMiddleware: {
+  //   "/api": "~/api",
+  // },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ["@nuxtjs/i18n", "@nuxtjs/style-resources", "@nuxtjs/axios"],
+
   publicRuntimeConfig: {
     axios: {
       baseURL: "http://localhost:3000",
     },
   },
+
   styleResources: {
     scss: ["./assets/scss/*.scss"],
   },
+
   ssr: false, // Disable Server Side rendering
+
   i18n: {
     locales: ["en", "fr", "es"],
     defaultLocale: "en",

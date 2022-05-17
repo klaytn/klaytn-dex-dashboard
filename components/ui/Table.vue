@@ -1,19 +1,19 @@
 <template>
-  <el-table
-    v-bind="$attrs"
-    v-on="$listeners"
-    style="width: 100%"
-    class="ui-table"
-    border
-    stripe
-  >
-    <template #header="{ column, $index }">
-      <slot name="header" v-bind="{ column, $index }"/>
-    </template>
-    <template #default="{ column, row, $index }">
-      <slot v-bind="{ column, row, $index }"/>
-    </template>
-  </el-table>
+  <div class="ui-table-wrapper">
+    <el-table
+      v-bind="$attrs"
+      v-on="$listeners"
+      style="width: 100%"
+      class="ui-table"
+    >
+      <template #header="{ column, $index }">
+        <slot name="header" v-bind="{ column, $index }"/>
+      </template>
+      <template #default="{ column, row, $index }">
+        <slot v-bind="{ column, row, $index }"/>
+      </template>
+    </el-table>
+  </div>
 </template>
 
 <script>
