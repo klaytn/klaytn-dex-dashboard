@@ -5,26 +5,38 @@
 </template>
 
 <script>
+import SubgraphClient from '@/services/subgraph/client';
+import { OverviewTokensQuery } from '@/services/subgraph/query/tokens';
+
+const formatTokenData = (data) => ({
+  ...data,
+  tradeVolume: Number(data.dayData[0]?.dailyVolumeToken ?? 0),
+  totalLiquidity: Number(data.totalLiquidity),
+});
+
 export default {
   name: "OverviewPage",
   data() {
     return {
-      tokensData: [
-        {
-          name: 'ETH',
-          price: 64.97,
-          priceChange: 3.01,
-          volume: 8.17,
-          tvl: 8.17
-        },
-        {
-          name: 'ETH',
-          price: 64.97,
-          priceChange: 3.01,
-          volume: 8.17,
-          tvl: 8.17
-        }
-      ]
+      tokensData: [],
+      tokensDataLoading: false,
+    }
+  },
+  mounted() {
+    this.updateTokensData();
+  },
+  methods: {
+    async updateTokensData() {
+      try {
+        this.tokensDataLoading = false;
+        const { data: { tokens } } = await SubgraphClient.query(OverviewTokensQuery).toPromise();
+        this.tokensData = tokens.map(tokenData => formatTokenData(tokenData));
+      } catch (error) {
+        console.error(error);
+        this.tokensData = [];
+      } finally {
+        this.tokensDataLoading = false;
+      }
     }
   }
 }

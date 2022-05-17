@@ -1,8 +1,8 @@
 <template>
   <ui-table
     :data="data"
+    :default-sort = "{prop: 'totalLiquidity', order: 'descending'}"
     style="width: 100%"
-    class="ui-table"
   >
     <el-table-column
       label="#"
@@ -15,6 +15,7 @@
     <el-table-column
       prop="name"
       label="Name"
+      sortable
     />
     <el-table-column
       prop="price"
@@ -33,19 +34,21 @@
       </template>
     </el-table-column>
     <el-table-column
-      prop="volume"
+      prop="tradeVolume"
       label="Volume 24H"
+      sortable
     >
       <template v-slot="{ row }">
-        <span>${{ row.volume }}</span>
+        <span>{{ formatAmount(row.tradeVolume) }}</span>
       </template>
     </el-table-column>
     <el-table-column
-      prop="tvl"
-      label="TVL"
+      prop="totalLiquidity"
+      label="Total Deposited"
+      sortable
     >
       <template v-slot="{ row }">
-        <span>${{ row.tvl }}</span>
+        <span>{{ formatAmount(row.totalLiquidity) }}</span>
       </template>
     </el-table-column>
   </ui-table>
@@ -59,6 +62,19 @@ export default {
       type: Array,
       required: true,
     }
-  }
+  },
+  methods: {
+    formatAmount(amount) {
+      const val = Number(amount);
+
+      if (Math.trunc(val / 1_000_000) > 0) {
+        return `${(val / 1_000_000).toFixed(2)}M`;
+      } else if (Math.trunc(val / 1_000) > 0) {
+        return `${(val / 1_000).toFixed(2)}K`;
+      }
+
+      return String(val.toFixed(2));
+    },
+  },
 }
 </script>

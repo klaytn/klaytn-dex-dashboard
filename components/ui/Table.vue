@@ -1,6 +1,7 @@
 <template>
   <div class="ui-table-wrapper">
     <el-table
+      :data="items"
       v-bind="$attrs"
       v-on="$listeners"
       style="width: 100%"
@@ -13,6 +14,17 @@
         <slot v-bind="{ column, row, $index }"/>
       </template>
     </el-table>
+    <el-pagination
+      class="ui-pagination"
+      layout="prev,slot,next"
+      :current-page="page"
+      :page-size="pageSize"
+      :total="total"
+      @prev-click="handlePage"
+      @next-click="handlePage"
+    >
+      <div>Page {{ page }} of {{ pages }}</div>
+    </el-pagination>
   </div>
 </template>
 
@@ -20,15 +32,68 @@
 export default {
   name: "UITable",
   inheritAttrs: false,
+  props: {
+    data: {
+      type: Array,
+      required: true,
+    },
+    pageSize: {
+      type: Number,
+      default: 5,
+    },
+  },
+  data() {
+    return {
+      page: 1
+    }
+  },
+  computed: {
+    total() {
+      return this.data.length;
+    },
+    pages() {
+      return Math.ceil(this.total / this.pageSize);
+    },
+    startIndex() {
+      return (this.page - 1) * this.pageSize;
+    },
+    lastIndex() {
+      return this.page * this.pageSize;
+    },
+    items() {
+      return this.data.slice(this.startIndex, this.lastIndex);
+    }
+  },
+  methods: {
+    handlePage(num) {
+      this.page = num;
+    }
+  }
 }
 </script>
 
 <style lang="scss">
-.ui-table {
+.ui-pagination {
+  display: flex;
+  align-items: center;
+  padding: 8px 0px;
+  min-height: 48px;
+  font-size: 16px;
+  line-height: 19px;
+  color: $dark2;
+}
+
+.ui-table-wrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
   background: $white;
   box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.05);
   border-radius: 20px;
+  overflow: hidden;
+}
 
+.ui-table {
   th {
     color: $gray4;
     font-weight: 500;
