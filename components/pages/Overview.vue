@@ -64,7 +64,7 @@ const formatPoolData = (data) => {
 const formatTransactionData = (data) => {
   let attrs = {
     id: data.id,
-    timestamp: data.timestamp,
+    timestamp: +data.timestamp * 1000,
   };
 
   if (data.swaps.length !== 0) {
@@ -95,7 +95,27 @@ const formatTransactionData = (data) => {
     }
   }
 
-  return null;
+  const type = data.mints.length !== 0 ? 'Add' : 'Remove';
+  const prop = data.mints.length !== 0 ? 'mints' : 'burns';
+
+  const tx = data[prop][0];
+  const from = tx.to;
+  const amount0 = +tx.amount0;
+  const amount1 = +tx.amount1;
+  const token0 = tx.pair.token0;
+  const token1 = tx.pair.token1;
+  const value = amount0 * +tx.pair.token0Price + amount1 * +tx.pair.token1Price;
+
+  return {
+    ...attrs,
+    from,
+    value,
+    amount0,
+    amount1,
+    token0,
+    token1,
+    type,
+  }
 };
 
 export default {
@@ -146,7 +166,7 @@ export default {
       try {
         this.transactionsDataLoading = false;
         const { data: { transactions } } = await SubgraphClient.query(OverviewTransactionsQuery).toPromise();
-        this.transactionsData = transactions.map(data => formatTransactionData(data)).filter(i => !!i);
+        this.transactionsData = transactions.map(data => formatTransactionData(data));
       } catch (error) {
         console.error(error);
         this.poolsData = [];

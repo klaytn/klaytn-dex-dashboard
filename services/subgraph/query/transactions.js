@@ -1,6 +1,6 @@
 export const OverviewTransactionsQuery = `
-query OverviewTransactionsQuery {
-  transactions(orderBy: timestamp, orderDirection: desc) {
+query OverviewTransactionsQuery ($first: Int = 50) {
+  transactions(first: $first, orderBy: timestamp, orderDirection: desc) {
     id
     timestamp
     burns {
@@ -27,6 +27,23 @@ query OverviewTransactionsQuery {
         token1 {
           id
           symbol
+        }
+      }
+    }
+    mints {
+      amount0
+      amount1
+      to
+      pair {
+        token0Price
+        token1Price
+        token0 {
+          id
+          symbol
+        }
+        token1 {
+          symbol
+          id
         }
       }
     }
