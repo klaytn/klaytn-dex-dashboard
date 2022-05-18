@@ -15,7 +15,9 @@
       </div>
     </header>
 
-    <Nuxt />
+    <div class="layout-main">
+      <Nuxt />
+    </div>
   </main>
 </template>
 
@@ -47,7 +49,12 @@ export default {
 
 <style scoped lang="scss">
 .layout {
-  padding: 40px 82px;
+  padding: 40px;
+
+  &-main {
+    margin: auto;
+    max-width: 1190px;
+  }
 
   & h1 {
     font-size: 30px;

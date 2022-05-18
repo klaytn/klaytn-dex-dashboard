@@ -1,5 +1,5 @@
 export const OverviewTokensQuery = `
-query Tokens {
+query OverviewTokensQuery {
   tokens {
     id
     name
