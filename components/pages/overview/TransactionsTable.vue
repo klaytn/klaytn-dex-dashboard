@@ -1,9 +1,18 @@
 <template>
   <ui-table
-    :data="data"
+    :data="items"
     style="width: 100%"
   >
-    <el-table-column>
+    <el-table-column width="232">
+      <template #header>
+        <span
+          :class="['tag', { 'is-primary': type === activeType }]"
+          v-for="type in types" :key="type"
+          @click="setActiveType(type)"
+        >
+          {{ type }}
+        </span>
+      </template>
       <template v-slot="{ row }">
         <span>{{ row.type }} {{ row.token0.symbol }} {{ formatType(row.type) }} {{ row.token1.symbol }}</span>
       </template>
@@ -60,6 +69,8 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
+import { TransactionTypes } from '@/consts';
+
 dayjs.extend(relativeTime);
 
 export default {
@@ -70,7 +81,26 @@ export default {
       required: true,
     }
   },
+  data() {
+    return {
+      activeType: TransactionTypes.all,
+    }
+  },
+  computed: {
+    types() {
+      return Object.values(TransactionTypes);
+    },
+    items() {
+      if (this.activeType === TransactionTypes.all) return this.data;
+
+      return this.data.filter(item => item.type === this.activeType);
+    }
+  },
   methods: {
+    setActiveType(type) {
+      this.activeType = type;
+    },
+
     formatAmount(amount) {
       const val = Number(amount);
 
@@ -89,8 +119,18 @@ export default {
       return `${address.slice(0, length / 2)}...${address.slice(-length / 2)}`;
     },
     formatType(type) {
-      return type === 'Swap' ? 'for' : 'and';
+      return type === TransactionTypes.swap ? 'for' : 'and';
     }
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.tag {
+  cursor: pointer;
+
+  & + & {
+    margin-left: 4px;
+  }
+}
+</style>

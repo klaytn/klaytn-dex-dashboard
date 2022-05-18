@@ -20,6 +20,7 @@ import SubgraphClient from '@/services/subgraph/client';
 import { OverviewTokensQuery } from '@/services/subgraph/query/tokens';
 import { OverviewPoolsQuery } from '@/services/subgraph/query/pools';
 import { OverviewTransactionsQuery } from '@/services/subgraph/query/transactions';
+import { TransactionTypes } from '@/consts';
 
 const aggregate = (data, aggrProperty = 'hourData', volumeA = 'volumeToken0', volumeB = 'volumeToken1') => {
   return data[aggrProperty].reduce((buffer, item) => {
@@ -91,11 +92,11 @@ const formatTransactionData = (data) => {
       amount1,
       token0,
       token1,
-      type: 'Swap',
+      type: TransactionTypes.swap,
     }
   }
 
-  const type = data.mints.length !== 0 ? 'Add' : 'Remove';
+  const type = data.mints.length !== 0 ? TransactionTypes.add : TransactionTypes.remove;
   const prop = data.mints.length !== 0 ? 'mints' : 'burns';
 
   const tx = data[prop][0];
