@@ -8,6 +8,10 @@
       <ui-title>Top Pools</ui-title>
       <pages-overview-pools-table :data="poolsData" />
     </div>
+    <div class="table-container">
+      <ui-title>Transactions</ui-title>
+      <pages-overview-transactions-table :data="transactionsData" />
+    </div>
   </div>
 </template>
 
@@ -87,10 +91,11 @@ const formatTransactionData = (data) => {
       amount1,
       token0,
       token1,
+      type: 'Swap',
     }
   }
 
-  return attrs;
+  return null;
 };
 
 export default {
@@ -141,7 +146,7 @@ export default {
       try {
         this.transactionsDataLoading = false;
         const { data: { transactions } } = await SubgraphClient.query(OverviewTransactionsQuery).toPromise();
-        this.transactionsData = transactions.map(data => formatTransactionData(data));
+        this.transactionsData = transactions.map(data => formatTransactionData(data)).filter(i => !!i);
       } catch (error) {
         console.error(error);
         this.poolsData = [];

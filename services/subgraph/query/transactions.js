@@ -22,11 +22,11 @@ query OverviewTransactionsQuery {
         token1Price
         token0 {
           id
-          name
+          symbol
         }
         token1 {
           id
-          name
+          symbol
         }
       }
     }
