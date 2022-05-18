@@ -15,6 +15,7 @@
 import SubgraphClient from '@/services/subgraph/client';
 import { OverviewTokensQuery } from '@/services/subgraph/query/tokens';
 import { OverviewPoolsQuery } from '@/services/subgraph/query/pools';
+import { OverviewTransactionsQuery } from '@/services/subgraph/query/transactions';
 
 const aggregate = (data, aggrProperty = 'hourData', volumeA = 'volumeToken0', volumeB = 'volumeToken1') => {
   return data[aggrProperty].reduce((buffer, item) => {
@@ -56,6 +57,42 @@ const formatPoolData = (data) => {
   };
 };
 
+const formatTransactionData = (data) => {
+  let attrs = {
+    id: data.id,
+    timestamp: data.timestamp,
+  };
+
+  if (data.swaps.length !== 0) {
+    const tx = data.swaps[0];
+    const from = tx.from;
+    const idxFrom = Number(+tx.amount0In === 0);
+    const idxTo = Number(!idxFrom);
+
+    const amount0 = +tx[`amount${idxFrom}In`];
+    const amount1 = +tx[`amount${idxTo}Out`];
+    const token0 = tx.pair[`token${idxFrom}`];
+    const token1 = tx.pair[`token${idxTo}`];
+
+    const value = Math.max(
+      amount0 * +tx.pair[`token${idxFrom}Price`],
+      amount1 * +tx.pair[`token${idxTo}Price`],
+    );
+
+    return {
+      ...attrs,
+      from,
+      value,
+      amount0,
+      amount1,
+      token0,
+      token1,
+    }
+  }
+
+  return attrs;
+};
+
 export default {
   name: "OverviewPage",
   data() {
@@ -64,18 +101,21 @@ export default {
       tokensDataLoading: false,
       poolsData: [],
       poolsDataLoading: false,
+      transactionsData: [],
+      transactionsDataLoading: false,
     }
   },
   mounted() {
     this.updateTokensData();
     this.updatePoolsData();
+    this.updateTransactionsData();
   },
   methods: {
     async updateTokensData() {
       try {
         this.tokensDataLoading = false;
         const { data: { tokens } } = await SubgraphClient.query(OverviewTokensQuery).toPromise();
-        this.tokensData = tokens.map(tokenData => formatTokenData(tokenData));
+        this.tokensData = tokens.map(data => formatTokenData(data));
       } catch (error) {
         console.error(error);
         this.tokensData = [];
@@ -88,12 +128,25 @@ export default {
       try {
         this.poolsDataLoading = false;
         const { data: { pairs } } = await SubgraphClient.query(OverviewPoolsQuery).toPromise();
-        this.poolsData = pairs.map(tokenData => formatPoolData(tokenData));
+        this.poolsData = pairs.map(data => formatPoolData(data));
       } catch (error) {
         console.error(error);
         this.poolsData = [];
       } finally {
         this.poolsDataLoading = false;
+      }
+    },
+
+    async updateTransactionsData() {
+      try {
+        this.transactionsDataLoading = false;
+        const { data: { transactions } } = await SubgraphClient.query(OverviewTransactionsQuery).toPromise();
+        this.transactionsData = transactions.map(data => formatTransactionData(data));
+      } catch (error) {
+        console.error(error);
+        this.poolsData = [];
+      } finally {
+        this.transactionsDataLoading = false;
       }
     }
   }
