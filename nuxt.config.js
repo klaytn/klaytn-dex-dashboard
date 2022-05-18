@@ -40,13 +40,7 @@ export default {
   // },
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["@nuxtjs/i18n", "@nuxtjs/style-resources", "@nuxtjs/axios"],
-
-  publicRuntimeConfig: {
-    axios: {
-      baseURL: "http://localhost:3000",
-    },
-  },
+  modules: ["@nuxtjs/i18n", "@nuxtjs/style-resources"],
 
   styleResources: {
     scss: ["./assets/scss/*.scss"],

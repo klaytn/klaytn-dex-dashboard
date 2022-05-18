@@ -1,6 +1,11 @@
-$blue: #2177F8;
+@import "./vars.scss";
+
 $radius: 8px;
 
 $primary: $blue;
+
+// components
+$tag-background-color: $gray3;
+$tag-color: $dark2;
 
 @import "~bulma/bulma.sass";
