@@ -1,6 +1,10 @@
 <template>
   <div>
     <div class="table-container">
+      <ui-title>Dex overview</ui-title>
+      <pages-overview-factory-chart :data="factoryTotalTransactionsData" />
+    </div>
+    <div class="table-container">
       <ui-title>Top Tokens</ui-title>
       <pages-overview-tokens-table :data="tokensData" />
     </div>
@@ -20,6 +24,7 @@ import SubgraphClient from '@/services/subgraph/client';
 import { OverviewTokensQuery } from '@/services/subgraph/query/tokens';
 import { OverviewPoolsQuery } from '@/services/subgraph/query/pools';
 import { OverviewTransactionsQuery } from '@/services/subgraph/query/transactions';
+import { OverviewFactoryTotalTransactions } from '@/services/subgraph/query/factory';
 import { TransactionTypes } from '@/consts';
 
 const aggregate = (data, aggrProperty = 'hourData', volumeA = 'volumeToken0', volumeB = 'volumeToken1') => {
@@ -119,6 +124,13 @@ const formatTransactionData = (data) => {
   }
 };
 
+const formatFactoryTotalTransactionsData = (data) => {
+  return {
+    timestamp: +data.timestamp * 1000,
+    totalTransactions: +data.totalTransactions,
+  };
+};
+
 export default {
   name: "OverviewPage",
   data() {
@@ -129,12 +141,15 @@ export default {
       poolsDataLoading: false,
       transactionsData: [],
       transactionsDataLoading: false,
+      factoryTotalTransactionsData: [],
+      factoryTotalTransactionsDataLoading: false,
     }
   },
   mounted() {
     this.updateTokensData();
     this.updatePoolsData();
     this.updateTransactionsData();
+    this.updateFactoryTotalTransactionsData();
   },
   methods: {
     async updateTokensData() {
@@ -173,6 +188,19 @@ export default {
         this.poolsData = [];
       } finally {
         this.transactionsDataLoading = false;
+      }
+    },
+
+    async updateFactoryTotalTransactionsData() {
+      try {
+        this.factoryTotalTransactionsDataLoading = false;
+        const { data: { factoryDayDatas } } = await SubgraphClient.query(OverviewFactoryTotalTransactions).toPromise();
+        this.factoryTotalTransactionsData = factoryDayDatas.map(data => formatFactoryTotalTransactionsData(data));
+      } catch (error) {
+        console.error(error);
+        this.poolsData = [];
+      } finally {
+        this.factoryTotalTransactionsDataLoading = false;
       }
     }
   }

@@ -3,7 +3,7 @@
     :data="items"
     style="width: 100%"
   >
-    <el-table-column width="232">
+    <el-table-column width="242">
       <template #header>
         <span
           :class="['tag', { 'is-primary': type === activeType }]"

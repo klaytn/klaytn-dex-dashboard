@@ -1,7 +1,8 @@
 <template>
-  <div class="ui-table-wrapper">
+  <ui-card>
     <el-table
       :data="items"
+      size="big"
       v-bind="$attrs"
       v-on="$listeners"
       style="width: 100%"
@@ -25,7 +26,7 @@
     >
       <div>Page {{ page }} of {{ pages }}</div>
     </el-pagination>
-  </div>
+  </ui-card>
 </template>
 
 <script>
@@ -83,16 +84,6 @@ export default {
   color: $dark2;
 }
 
-.ui-table-wrapper {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  background: $white;
-  box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.05);
-  border-radius: 20px;
-  overflow: hidden;
-}
-
 .ui-table {
   th {
     color: $gray4;
@@ -112,6 +103,14 @@ export default {
 
   .cell {
     min-height: 24px;
+  }
+
+  &.el-table {
+    .cell,
+    th.el-table__cell > .cell {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
   }
 }
 </style>

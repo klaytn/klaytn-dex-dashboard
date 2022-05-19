@@ -18,12 +18,12 @@ export default {
   css: [
     "~assets/scss/main.css",
     "~assets/scss/vars.scss",
-    "~assets/scss/element.scss",
     "~assets/scss/bulma.scss",
+    "~assets/scss/element.scss",
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ["~/plugins/element.js"],
+  plugins: ["~/plugins/element.js", "~/plugins/echarts.js"],
 
   router: {
     mode: 'hash'
@@ -33,7 +33,7 @@ export default {
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: ["@nuxtjs/svg"],
+  buildModules: ["@nuxtjs/svg", "@nuxtjs/composition-api/module"],
 
   // serverMiddleware: {
   //   "/api": "~/api",
@@ -43,7 +43,7 @@ export default {
   modules: ["@nuxtjs/i18n", "@nuxtjs/style-resources"],
 
   styleResources: {
-    scss: ["./assets/scss/*.scss"],
+    scss: ["./assets/scss/vars.scss"],
   },
 
   ssr: false, // Disable Server Side rendering
