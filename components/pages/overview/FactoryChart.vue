@@ -1,5 +1,5 @@
 <template>
-  <ui-card>
+  <ui-card class="chart-card">
     <v-chart class="chart" :option="chartData" />
   </ui-card>
 </template>
@@ -22,14 +22,17 @@ export default {
           text: "Total Transactions",
           left: "center"
         },
-        axisPointer: {
-          show: true,
-          type: 'line',
-          animation: false,
-          label: {
-            show: false,
-          },
+        tooltip: {
+          trigger: 'axis',
         },
+        // axisPointer: {
+        //   show: true,
+        //   type: 'line',
+        //   animation: false,
+        //   label: {
+        //     show: false,
+        //   },
+        // },
         xAxis: {
           type: 'category',
           boundaryGap: false,
@@ -54,5 +57,9 @@ export default {
 <style lang="scss">
 .chart {
   height: 400px;
+}
+
+.chart-card {
+  padding: 16px;
 }
 </style>
