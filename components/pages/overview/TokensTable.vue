@@ -12,12 +12,14 @@
         <span>{{ $index + 1 }}</span>
       </template>
     </el-table-column>
+
     <el-table-column
       prop="name"
       label="Name"
       sortable
     />
-    <el-table-column
+
+    <!-- <el-table-column
       prop="price"
       label="Price"
     >
@@ -25,6 +27,7 @@
         <span>${{ row.price }}</span>
       </template>
     </el-table-column>
+
     <el-table-column
       prop="priceChange"
       label="Price Change"
@@ -32,7 +35,8 @@
       <template v-slot="{ row }">
         <span>{{ row.priceChange }} %</span>
       </template>
-    </el-table-column>
+    </el-table-column> -->
+
     <el-table-column
       prop="tradeVolume"
       label="Volume 24H"
