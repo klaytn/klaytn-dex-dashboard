@@ -1,25 +1,33 @@
 <template>
   <div>
-    <div class="charts-container">
+    <div class="basic-container">
       <ui-title>Dex overview</ui-title>
       <div class="charts-items">
         <div class="chart-item">
-          <pages-overview-factory-chart :data="factoryTotalTransactionsData" title="Total transactions" />
+          <ui-chart
+            :data="factoryTotalTransactionsData"
+            :spec="tvlSpec"
+            title="Total transactions"
+          />
         </div>
         <div class="chart-item">
-          <pages-overview-factory-chart :data="factoryTotalTransactionsData" title="Total transactions" />
+          <ui-chart
+            :data="factoryTotalTransactionsData"
+            :spec="tvlSpec"
+            title="Total transactions"
+          />
         </div>
       </div>
     </div>
-    <div class="table-container">
+    <div class="basic-container">
       <ui-title>Top Tokens</ui-title>
       <pages-overview-tokens-table :data="tokensData" />
     </div>
-    <div class="table-container">
+    <div class="basic-container">
       <ui-title>Top Pools</ui-title>
       <pages-overview-pools-table :data="poolsData" />
     </div>
-    <div class="table-container">
+    <div class="basic-container">
       <ui-title>Transactions</ui-title>
       <pages-overview-transactions-table :data="transactionsData" />
     </div>
@@ -33,6 +41,8 @@ import { OverviewPoolsQuery } from '@/services/subgraph/query/pools';
 import { OverviewTransactionsQuery } from '@/services/subgraph/query/transactions';
 import { OverviewFactoryTotalTransactions } from '@/services/subgraph/query/factory';
 import { TransactionTypes } from '@/consts';
+
+import { tvlChartSpec } from '@/utils/chartSpecs';
 
 const aggregate = (data, aggrProperty = 'hourData', volumeA = 'volumeToken0', volumeB = 'volumeToken1') => {
   return data[aggrProperty].reduce((buffer, item) => {
@@ -152,6 +162,13 @@ export default {
       factoryTotalTransactionsDataLoading: false,
     }
   },
+
+  computed: {
+    tvlSpec() {
+      return tvlChartSpec(this.factoryTotalTransactionsData);
+    }
+  },
+
   mounted() {
     this.updateTokensData();
     this.updatePoolsData();
@@ -215,7 +232,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.charts-container {
+.basic-container {
   margin-bottom: 24px;
 }
 

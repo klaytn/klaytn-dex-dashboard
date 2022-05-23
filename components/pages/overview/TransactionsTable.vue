@@ -130,7 +130,7 @@ export default {
   cursor: pointer;
 
   & + & {
-    margin-left: 4px;
+    margin-left: 2px;
   }
 }
 </style>
