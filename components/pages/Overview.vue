@@ -1,8 +1,15 @@
 <template>
   <div>
-    <div class="table-container">
+    <div class="charts-container">
       <ui-title>Dex overview</ui-title>
-      <pages-overview-factory-chart :data="factoryTotalTransactionsData" />
+      <div class="charts-items">
+        <div class="chart-item">
+          <pages-overview-factory-chart :data="factoryTotalTransactionsData" />
+        </div>
+        <div class="chart-item">
+          <pages-overview-factory-chart :data="factoryTotalTransactionsData" />
+        </div>
+      </div>
     </div>
     <div class="table-container">
       <ui-title>Top Tokens</ui-title>
@@ -207,3 +214,21 @@ export default {
 }
 </script>
 
+<style lang="scss" scoped>
+.charts-container {
+  margin-bottom: 24px;
+}
+
+.charts-items {
+  display: flex;
+  flex: 1;
+  flex-flow: row nowrap;
+  margin: -10px;
+
+  .chart-item {
+    flex: 1;
+    width: calc(100% - 10px);
+    padding: 10px;
+  }
+}
+</style>
