@@ -4,10 +4,10 @@
       <ui-title>Dex overview</ui-title>
       <div class="charts-items">
         <div class="chart-item">
-          <pages-overview-factory-chart :data="factoryTotalTransactionsData" />
+          <pages-overview-factory-chart :data="factoryTotalTransactionsData" title="Total transactions" />
         </div>
         <div class="chart-item">
-          <pages-overview-factory-chart :data="factoryTotalTransactionsData" />
+          <pages-overview-factory-chart :data="factoryTotalTransactionsData" title="Total transactions" />
         </div>
       </div>
     </div>

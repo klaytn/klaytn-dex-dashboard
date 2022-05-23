@@ -25,7 +25,7 @@ footer, header, hgroup, menu, nav, section {
   display: block;
 }
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', sans-serif !important;
   line-height: 1;
   background: #DEE4F0;
   min-height: 100vh;
