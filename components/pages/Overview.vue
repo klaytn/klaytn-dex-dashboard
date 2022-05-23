@@ -134,7 +134,7 @@ const formatTransactionData = (data) => {
 const formatFactoryTotalTransactionsData = (data) => {
   return {
     timestamp: +data.timestamp * 1000,
-    totalTransactions: +data.totalTransactions,
+    value: +data.totalTransactions,
   };
 };
 

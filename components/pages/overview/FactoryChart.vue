@@ -2,7 +2,7 @@
   <ui-card class="chart-card">
     <div class="chart-data" v-if="selectedData">
       <div class="chart-data__secondary">{{ title }}</div>
-      <div class="chart-data__primary">{{ selectedData.totalTransactions }}</div>
+      <div class="chart-data__primary">{{ selectedDataValue }}</div>
       <div class="chart-data__secondary">{{ selectedDataTime }}</div>
     </div>
     <v-chart ref="chart" class="chart" :option="chartData" autoresize @highlight="highlight" @globalout="resetHighlight"/>
@@ -33,9 +33,22 @@ export default {
   created() {
     this.resetHighlight();
   },
+
+  mounted() {
+    window.addEventListener('resize', this.onResize);
+  },
+
+  destroyed() {
+    window.removeEventListener('resize', this.onResize);
+  },
+
   computed: {
     selectedData() {
       return this.data[this.highlightIndex];
+    },
+
+    selectedDataValue() {
+      return this.selectedData ? this.selectedData.value : 0;
     },
 
     selectedDataTime() {
@@ -72,7 +85,7 @@ export default {
         },
         series: [
           {
-            data: this.data.map(item => item.totalTransactions),
+            data: this.data.map(item => item.value),
             type: 'line',
             showSymbol: false,
             itemStyle: {
@@ -104,6 +117,10 @@ export default {
     },
     resetHighlight() {
       this.highlightIndex = this.data.length - 1;
+    },
+
+    onResize() {
+      this.$refs.chart.resize();
     }
   }
 }
