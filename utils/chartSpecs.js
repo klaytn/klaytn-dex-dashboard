@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { graphic } from 'echarts';
 
-export const tvlChartSpec = (chartData) => ({
+export const factoryTvlChartSpec = (chartData) => ({
   xAxis: {
     type: 'category',
     boundaryGap: false,
@@ -22,6 +22,12 @@ export const tvlChartSpec = (chartData) => ({
         color: '#ADB9CE',
         type: 'solid',
       }
+    },
+    axisTick: {
+      show: false
+    },
+    axisLine: {
+      show: false
     },
   },
   yAxis: {
@@ -53,4 +59,43 @@ export const tvlChartSpec = (chartData) => ({
       }
     },
   ],
+});
+
+export const factoryVolumeChartSpec = (chartData) => ({
+  xAxis: {
+    data: chartData.map(item => item.timestamp),
+    axisLabel: {
+      formatter(value) {
+        return dayjs(+value).format('DD MMM')
+      }
+    },
+    axisTick: {
+      show: false
+    },
+    axisLine: {
+      show: false
+    },
+  },
+  yAxis: {
+    show: false,
+    type: 'value'
+  },
+  series: [
+    {
+      type: 'bar',
+      data: chartData.map(item => item.value),
+      itemStyle: {
+        color: '#8FBAFB'
+      },
+      showBackground: true,
+      backgroundStyle: {
+        color: '#DFE4ED',
+      },
+      emphasis: {
+        itemStyle: {
+          color: '#0263F5'
+        },
+      },
+    }
+  ]
 });

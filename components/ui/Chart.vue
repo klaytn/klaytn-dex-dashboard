@@ -9,7 +9,6 @@
       ref="chart"
       class="ui-chart"
       :option="spec"
-      autoresize
       @highlight="highlight"
       @globalout="resetHighlight"
     />
@@ -71,6 +70,7 @@ export default {
   },
   methods: {
     highlight(value) {
+      console.log(value)
       this.highlightIndex = value.batch[0].dataIndex;
     },
     resetHighlight() {

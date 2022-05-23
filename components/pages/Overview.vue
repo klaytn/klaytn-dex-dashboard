@@ -13,8 +13,8 @@
         <div class="chart-item">
           <ui-chart
             :data="factoryTotalTransactionsData"
-            :spec="tvlSpec"
-            title="Total transactions"
+            :spec="volumeSpec"
+            title="Volume 24H"
           />
         </div>
       </div>
@@ -42,7 +42,7 @@ import { OverviewTransactionsQuery } from '@/services/subgraph/query/transaction
 import { OverviewFactoryTotalTransactions } from '@/services/subgraph/query/factory';
 import { TransactionTypes } from '@/consts';
 
-import { tvlChartSpec } from '@/utils/chartSpecs';
+import { factoryTvlChartSpec, factoryVolumeChartSpec } from '@/utils/chartSpecs';
 
 const aggregate = (data, aggrProperty = 'hourData', volumeA = 'volumeToken0', volumeB = 'volumeToken1') => {
   return data[aggrProperty].reduce((buffer, item) => {
@@ -165,7 +165,10 @@ export default {
 
   computed: {
     tvlSpec() {
-      return tvlChartSpec(this.factoryTotalTransactionsData);
+      return factoryTvlChartSpec(this.factoryTotalTransactionsData);
+    },
+    volumeSpec() {
+      return factoryVolumeChartSpec(this.factoryTotalTransactionsData);
     }
   },
 
