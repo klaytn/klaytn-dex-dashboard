@@ -32,7 +32,7 @@ export const factoryTvlChartSpec = (chartData) => ({
   },
   yAxis: {
     show: false,
-    type: 'value'
+    type: 'value',
   },
   series: [
     {
@@ -73,6 +73,19 @@ export const factoryVolumeChartSpec = (chartData, formatter = (value) => value) 
     axisLine: {
       show: false
     },
+    axisPointer: {
+      show: true,
+      animation: false,
+      type: 'shadow',
+      label: {
+        show: false,
+      },
+      shadowStyle: {
+        color: '#DFE4ED',
+        shadowBlur: 0,
+      },
+      z: 1,
+    },
   },
   yAxis: {
     show: false,
@@ -84,10 +97,6 @@ export const factoryVolumeChartSpec = (chartData, formatter = (value) => value) 
       data: chartData.map(item => item.value),
       itemStyle: {
         color: '#8FBAFB'
-      },
-      showBackground: true,
-      backgroundStyle: {
-        color: '#DFE4ED',
       },
       emphasis: {
         itemStyle: {

@@ -98,7 +98,7 @@ export default {
   width: 100%;
 
   &-card {
-    padding: 16px;
+    padding: 16px 0;
     position: relative;
   }
 

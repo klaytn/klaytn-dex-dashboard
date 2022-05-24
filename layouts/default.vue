@@ -11,7 +11,7 @@
       </div>
 
       <div class="col col-right">
-        Search & button
+        <!-- Search & button -->
       </div>
     </header>
 
