@@ -15,7 +15,11 @@
             :data="factoryTotalTransactionsData"
             :spec="volumeSpec"
             title="Volume 24H"
-          />
+          >
+            <template #controls>
+              <ui-tags v-model="activeVolumeTag" :tags="volumeTags" />
+            </template>
+          </ui-chart>
         </div>
       </div>
     </div>
@@ -40,7 +44,7 @@ import { OverviewTokensQuery } from '@/services/subgraph/query/tokens';
 import { OverviewPoolsQuery } from '@/services/subgraph/query/pools';
 import { OverviewTransactionsQuery } from '@/services/subgraph/query/transactions';
 import { OverviewFactoryTotalTransactions } from '@/services/subgraph/query/factory';
-import { TransactionTypes } from '@/consts';
+import { TransactionTypes, DateTags } from '@/consts';
 
 import { factoryTvlChartSpec, factoryVolumeChartSpec } from '@/utils/chartSpecs';
 
@@ -152,6 +156,9 @@ export default {
   name: "OverviewPage",
   data() {
     return {
+      volumeTag: DateTags.daily,
+      volumeTags: Object.values(DateTags),
+
       tokensData: [],
       tokensDataLoading: false,
       poolsData: [],
@@ -164,6 +171,16 @@ export default {
   },
 
   computed: {
+    activeVolumeTag: {
+      get() {
+        return this.volumeTag;
+      },
+      set(value) {
+        this.volumeTag = value;
+      },
+    },
+
+
     tvlSpec() {
       return factoryTvlChartSpec(this.factoryTotalTransactionsData);
     },

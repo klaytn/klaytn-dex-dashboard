@@ -1,15 +1,21 @@
 <template>
   <ui-card class="ui-chart-card">
-    <div class="ui-chart-data" v-if="selectedData">
-      <div class="ui-chart-data__secondary">{{ title }}</div>
-      <div class="ui-chart-data__primary">{{ selectedDataValue }}</div>
-      <div class="ui-chart-data__secondary">{{ selectedDataTime }}</div>
+    <div class="ui-chart-data">
+      <div class="ui-chart-title" v-if="selectedData">
+        <div class="ui-chart-title__secondary">{{ title }}</div>
+        <div class="ui-chart-title__primary">{{ selectedDataValue }}</div>
+        <div class="ui-chart-title__secondary">{{ selectedDataTime }}</div>
+      </div>
+
+      <slot name="controls" />
     </div>
+
     <v-chart
       ref="chart"
       class="ui-chart"
       :option="spec"
       @highlight="highlight"
+      @mouseover="highlight"
       @globalout="resetHighlight"
     />
   </ui-card>
@@ -70,9 +76,13 @@ export default {
   },
   methods: {
     highlight(value) {
-      console.log(value)
-      this.highlightIndex = value.batch[0].dataIndex;
+      if (value.componentSubType === 'bar') {
+        this.highlightIndex = value.dataIndex;
+      } else {
+        this.highlightIndex = value.batch[0].dataIndex;
+      }
     },
+
     resetHighlight() {
       this.highlightIndex = this.data.length > 0 ? this.data.length - 1 : 0;
     },
@@ -88,18 +98,25 @@ export default {
 .ui-chart {
   height: 400px;
   width: 100%;
-}
 
-.ui-chart-card {
-  padding: 16px;
-  position: relative;
+  &-card {
+    padding: 16px;
+    position: relative;
+  }
 
-  .ui-chart-data {
+  &-data {
     position: absolute;
     top: 0px;
     left: 0px;
+    right: 0px;
     padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    z-index: 2;
+  }
 
+  &-title {
     &__secondary {
       color: $gray4;
       font-weight: 500;

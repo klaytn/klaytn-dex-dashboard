@@ -3,15 +3,9 @@
     :data="items"
     style="width: 100%"
   >
-    <el-table-column width="242">
+    <el-table-column width="252">
       <template #header>
-        <span
-          :class="['tag', { 'is-primary': type === activeType }]"
-          v-for="type in types" :key="type"
-          @click="setActiveType(type)"
-        >
-          {{ type }}
-        </span>
+        <ui-tags v-model="type" :tags="types" />
       </template>
       <template v-slot="{ row }">
         <span>{{ row.type }} {{ row.token0.symbol }} {{ formatType(row.type) }} {{ row.token1.symbol }}</span>
@@ -87,6 +81,14 @@ export default {
     }
   },
   computed: {
+    type: {
+      get() {
+        return this.activeType;
+      },
+      set(value) {
+        this.activeType = value;
+      }
+    },
     types() {
       return Object.values(TransactionTypes);
     },
@@ -124,13 +126,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.tag {
-  cursor: pointer;
-
-  & + & {
-    margin-left: 2px;
-  }
-}
-</style>

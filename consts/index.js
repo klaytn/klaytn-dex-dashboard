@@ -4,3 +4,9 @@ export const TransactionTypes = {
   remove: 'Remove',
   swap: 'Swap'
 };
+
+export const DateTags = {
+  daily: 'D',
+  weekly: 'W',
+  monthly: 'M',
+};
