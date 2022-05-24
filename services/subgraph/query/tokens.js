@@ -1,13 +1,15 @@
 export const OverviewTokensQuery = `
-query OverviewTokensQuery {
+query OverviewTokensQuery($timestamp: Int) {
   tokens {
     id
     name
     symbol
     tradeVolume
     totalLiquidity
-    dayData(first: 1, orderBy: timestamp, orderDirection: desc) {
+    derivedUSD
+    dayData(orderBy: timestamp, orderDirection: desc, where: {timestamp_gte: $timestamp}) {
       dailyVolumeToken
+      priceUSD
     }
   }
 }

@@ -73,16 +73,24 @@ const aggregate = (data, aggrProperty = 'hourData', volumeA = 'volumeToken0', vo
 };
 
 const formatTokenData = (data) => {
+  const tradeVolume = Number(data.dayData[0]?.dailyVolumeToken ?? 0);
+  const totalLiquidity = Number(data.totalLiquidity);
+  const price = Number(data.derivedUSD);
+  const lastPrice = Number(data.dayData[1]?.priceUSD ?? 0);
+  const priceChange = lastPrice !== 0 ? (price - lastPrice) * 100 / lastPrice : 0;
+
   return {
     ...data,
-    tradeVolume: Number(data.dayData[0]?.dailyVolumeToken ?? 0),
-    totalLiquidity: Number(data.totalLiquidity),
+    price,
+    priceChange,
+    tradeVolume: tradeVolume * price,
+    totalLiquidity: totalLiquidity * price,
   };
 };
 
 const formatPoolData = (data) => {
-  const token0price = Number(data.token0Price);
-  const token1price = Number(data.token1Price);
+  const token0price = Number(data.token0.derivedUSD);
+  const token1price = Number(data.token1.derivedUSD);
 
   const daily = aggregate(data, 'hourData');
   const weekly= aggregate(data, 'dayData');
@@ -90,7 +98,7 @@ const formatPoolData = (data) => {
   const dayVolume = daily.volumeToken0 * token0price + daily.volumeToken1 * token1price;
   const weekVolume = weekly.volumeToken0 * token0price + weekly.volumeToken1 * token1price;
 
-  const tvl = Number(data.reserve0) * token0price + Number(data.reserve1) * token1price;
+  const tvl = Number(data.reserveUSD);
 
   return {
     id: data.id,
@@ -262,9 +270,12 @@ export default {
   },
   methods: {
     async updateTokensData() {
+      // two days before
+      const timestamp = dayjs().startOf('hour').unix() - 2 * 24 * 60 * 60;
+      const vars = { timestamp };
       try {
         this.tokensDataLoading = true;
-        const { data: { tokens } } = await SubgraphClient.query(OverviewTokensQuery).toPromise();
+        const { data: { tokens } } = await SubgraphClient.query(OverviewTokensQuery, vars).toPromise();
         this.tokensData = tokens.map(data => formatTokenData(data));
       } catch (error) {
         console.error(error);
@@ -275,9 +286,15 @@ export default {
     },
 
     async updatePoolsData() {
+      // 7 days before
+      const dayTimestamp = dayjs().startOf('hour').unix() - 7 * 24 * 60 * 60;
+      // 1 days before
+      const hourTimestamp = dayjs().startOf('hour').unix() - 24 * 60 * 60;
+      const vars = { dayTimestamp, hourTimestamp };
+
       try {
         this.poolsDataLoading = true;
-        const { data: { pairs } } = await SubgraphClient.query(OverviewPoolsQuery).toPromise();
+        const { data: { pairs } } = await SubgraphClient.query(OverviewPoolsQuery, vars).toPromise();
         this.poolsData = pairs.map(data => formatPoolData(data));
       } catch (error) {
         console.error(error);
