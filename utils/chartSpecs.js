@@ -61,13 +61,11 @@ export const factoryTvlChartSpec = (chartData) => ({
   ],
 });
 
-export const factoryVolumeChartSpec = (chartData) => ({
+export const factoryVolumeChartSpec = (chartData, formatter = (value) => value) => ({
   xAxis: {
-    data: chartData.map(item => item.timestamp),
+    data: chartData.map(item => item.start),
     axisLabel: {
-      formatter(value) {
-        return dayjs(+value).format('DD MMM')
-      }
+      formatter
     },
     axisTick: {
       show: false

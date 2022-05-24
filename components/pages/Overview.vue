@@ -7,14 +7,18 @@
           <ui-chart
             :data="factoryTotalTransactionsData"
             :spec="tvlSpec"
+            :value-formatter="valueFormatter"
+            :time-formatter="timeFormatter"
             title="Total transactions"
           />
         </div>
         <div class="chart-item">
           <ui-chart
-            :data="factoryTotalTransactionsData"
+            :data="volumeGroups"
             :spec="volumeSpec"
-            title="Volume 24H"
+            :value-formatter="valueFormatter"
+            :time-formatter="volumeTimeFormatter"
+            title="Volume"
           >
             <template #controls>
               <ui-tags v-model="activeVolumeTag" :tags="volumeTags" />
@@ -39,6 +43,10 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
+import dayOfYear from 'dayjs/plugin/dayOfYear';
+import weekOfYear from 'dayjs/plugin/weekOfYear'
+
 import SubgraphClient from '@/services/subgraph/client';
 import { OverviewTokensQuery } from '@/services/subgraph/query/tokens';
 import { OverviewPoolsQuery } from '@/services/subgraph/query/pools';
@@ -47,6 +55,9 @@ import { OverviewFactoryTotalTransactions } from '@/services/subgraph/query/fact
 import { TransactionTypes, DateTags } from '@/consts';
 
 import { factoryTvlChartSpec, factoryVolumeChartSpec } from '@/utils/chartSpecs';
+
+dayjs.extend(dayOfYear);
+dayjs.extend(weekOfYear);
 
 const aggregate = (data, aggrProperty = 'hourData', volumeA = 'volumeToken0', volumeB = 'volumeToken1') => {
   return data[aggrProperty].reduce((buffer, item) => {
@@ -152,6 +163,40 @@ const formatFactoryTotalTransactionsData = (data) => {
   };
 };
 
+const groupFactoryDailyData = (data, dateTag) => {
+  const isDaily = dateTag === DateTags.daily;
+  const isMontly = dateTag === DateTags.monthly;
+
+  const groupsByYear = data.reduce((buffer, item) => {
+    const date = dayjs(item.timestamp);
+    const year = date.year();
+    const prop = isDaily ? date.dayOfYear() : (isMontly ? date.month() : date.week());
+
+    if (!buffer[year]) buffer[year] = {};
+    if (!buffer[year][prop]) buffer[year][prop] = 0;
+
+    buffer[year][prop] += item.value;
+
+    return buffer;
+  }, {});
+
+  return Object.entries(groupsByYear).reduce((buffer, [year, groups]) => {
+    Object.entries(groups).forEach(([prop, value]) => {
+      const date = dayjs().year(year);
+      const start = isDaily ? date.dayOfYear(prop) : (isMontly ? date.month(prop).date(1) : date.week(prop).day(1));
+      const end = isDaily ? start : (isMontly ? start.endOf('month') : start.endOf('week'));
+
+      buffer.push({
+        start: start.valueOf(),
+        end: end.valueOf(),
+        value,
+      });
+    });
+
+    return buffer;
+  }, []);
+};
+
 export default {
   name: "OverviewPage",
   data() {
@@ -180,12 +225,30 @@ export default {
       },
     },
 
-
     tvlSpec() {
       return factoryTvlChartSpec(this.factoryTotalTransactionsData);
     },
+    valueFormatter() {
+      return (v) => v.value;
+    },
+    timeFormatter() {
+      return (v) => dayjs(v.timestamp).format('MMM DD, YYYY');
+    },
+
     volumeSpec() {
-      return factoryVolumeChartSpec(this.factoryTotalTransactionsData);
+      const formatter = this.activeVolumeTag === DateTags.monthly
+        ? (value) => dayjs(+value).format('MMM')
+        : (value) => dayjs(+value).format('DD MMM');
+
+      return factoryVolumeChartSpec(this.volumeGroups, formatter);
+    },
+    volumeGroups() {
+      return groupFactoryDailyData(this.factoryTotalTransactionsData, this.activeVolumeTag);
+    },
+    volumeTimeFormatter() {
+      return this.activeVolumeTag === DateTags.daily
+        ? (value) => dayjs(value.start).format('MMM DD, YYYY')
+        : (value) => `${dayjs(value.start).format('MMM DD')}-${dayjs(value.end).format('MMM DD, YYYY')}`;
     }
   },
 

@@ -3,8 +3,8 @@
     <div class="ui-chart-data">
       <div class="ui-chart-title" v-if="selectedData">
         <div class="ui-chart-title__secondary">{{ title }}</div>
-        <div class="ui-chart-title__primary">{{ selectedDataValue }}</div>
-        <div class="ui-chart-title__secondary">{{ selectedDataTime }}</div>
+        <div class="ui-chart-title__primary">{{ valueFormatter(selectedData) }}</div>
+        <div class="ui-chart-title__secondary">{{ timeFormatter(selectedData) }}</div>
       </div>
 
       <slot name="controls" />
@@ -22,8 +22,6 @@
 </template>
 
 <script>
-import dayjs from 'dayjs';
-
 export default {
   name: 'UIChart',
   props: {
@@ -38,7 +36,15 @@ export default {
     title: {
       type: String,
       default: '',
-    }
+    },
+    valueFormatter: {
+      type: Function,
+      default: (v) => v,
+    },
+    timeFormatter: {
+      type: Function,
+      default: (v) => v,
+    },
   },
   data() {
     return {
@@ -65,18 +71,10 @@ export default {
     selectedData() {
       return this.data[this.highlightIndex];
     },
-
-    selectedDataValue() {
-      return this.selectedData ? this.selectedData.value : 0;
-    },
-
-    selectedDataTime() {
-      return this.selectedData ? dayjs(this.selectedData.timestamp).format('MMM DD, YYYY') : '';
-    },
   },
   methods: {
     highlight(value) {
-      if (value.componentSubType === 'bar') {
+      if (value.componentSubType) {
         this.highlightIndex = value.dataIndex;
       } else {
         this.highlightIndex = value.batch[0].dataIndex;
