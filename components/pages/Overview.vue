@@ -10,6 +10,7 @@
             :value-formatter="valueFormatter"
             :time-formatter="timeFormatter"
             title="Total transactions"
+            v-loading="factoryTotalTransactionsDataLoading"
           />
         </div>
         <div class="chart-item">
@@ -19,6 +20,7 @@
             :value-formatter="valueFormatter"
             :time-formatter="volumeTimeFormatter"
             title="Volume"
+            v-loading="factoryTotalTransactionsDataLoading"
           >
             <template #controls>
               <ui-tags v-model="activeVolumeTag" :tags="volumeTags" />
@@ -29,15 +31,15 @@
     </div>
     <div class="basic-container">
       <ui-title>Top Tokens</ui-title>
-      <pages-overview-tokens-table :data="tokensData" />
+      <pages-overview-tokens-table :data="tokensData" v-loading="tokensDataLoading" />
     </div>
     <div class="basic-container">
       <ui-title>Top Pools</ui-title>
-      <pages-overview-pools-table :data="poolsData" />
+      <pages-overview-pools-table :data="poolsData" v-loading="poolsDataLoading" />
     </div>
     <div class="basic-container">
       <ui-title>Transactions</ui-title>
-      <pages-overview-transactions-table :data="transactionsData" />
+      <pages-overview-transactions-table :data="transactionsData" v-loading="transactionsDataLoading" />
     </div>
   </div>
 </template>
@@ -205,13 +207,13 @@ export default {
       volumeTags: Object.values(DateTags),
 
       tokensData: [],
-      tokensDataLoading: false,
+      tokensDataLoading: true,
       poolsData: [],
-      poolsDataLoading: false,
+      poolsDataLoading: true,
       transactionsData: [],
-      transactionsDataLoading: false,
+      transactionsDataLoading: true,
       factoryTotalTransactionsData: [],
-      factoryTotalTransactionsDataLoading: false,
+      factoryTotalTransactionsDataLoading: true,
     }
   },
 
@@ -261,7 +263,7 @@ export default {
   methods: {
     async updateTokensData() {
       try {
-        this.tokensDataLoading = false;
+        this.tokensDataLoading = true;
         const { data: { tokens } } = await SubgraphClient.query(OverviewTokensQuery).toPromise();
         this.tokensData = tokens.map(data => formatTokenData(data));
       } catch (error) {
@@ -274,7 +276,7 @@ export default {
 
     async updatePoolsData() {
       try {
-        this.poolsDataLoading = false;
+        this.poolsDataLoading = true;
         const { data: { pairs } } = await SubgraphClient.query(OverviewPoolsQuery).toPromise();
         this.poolsData = pairs.map(data => formatPoolData(data));
       } catch (error) {
@@ -287,7 +289,7 @@ export default {
 
     async updateTransactionsData() {
       try {
-        this.transactionsDataLoading = false;
+        this.transactionsDataLoading = true;
         const { data: { transactions } } = await SubgraphClient.query(OverviewTransactionsQuery).toPromise();
         this.transactionsData = transactions.map(data => formatTransactionData(data));
       } catch (error) {
@@ -300,7 +302,7 @@ export default {
 
     async updateFactoryTotalTransactionsData() {
       try {
-        this.factoryTotalTransactionsDataLoading = false;
+        this.factoryTotalTransactionsDataLoading = true;
         const { data: { factoryDayDatas } } = await SubgraphClient.query(OverviewFactoryTotalTransactions).toPromise();
         this.factoryTotalTransactionsData = factoryDayDatas.map(data => formatFactoryTotalTransactionsData(data));
       } catch (error) {

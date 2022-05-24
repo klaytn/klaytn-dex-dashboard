@@ -4,57 +4,42 @@
     :default-sort = "{prop: 'totalLiquidity', order: 'descending'}"
     style="width: 100%"
   >
-    <el-table-column
-      label="#"
-      width="64"
-    >
-      <template v-slot="{ $index }">
-        <span>{{ $index + 1 }}</span>
-      </template>
-    </el-table-column>
+    <template v-slot="{ startIndex }">
+      <el-table-column
+        label="#"
+        width="84"
+      >
+        <template v-slot="{ $index }">
+          <span>{{ startIndex + $index + 1 }}</span>
+        </template>
+      </el-table-column>
 
-    <el-table-column
-      prop="name"
-      label="Name"
-      sortable
-    />
+      <el-table-column
+        prop="name"
+        label="Name"
+        sortable
+      />
 
-    <!-- <el-table-column
-      prop="price"
-      label="Price"
-    >
-      <template v-slot="{ row }">
-        <span>${{ row.price }}</span>
-      </template>
-    </el-table-column>
+      <el-table-column
+        prop="tradeVolume"
+        label="Volume 24H"
+        sortable
+      >
+        <template v-slot="{ row }">
+          <span>{{ formatAmount(row.tradeVolume) }}</span>
+        </template>
+      </el-table-column>
 
-    <el-table-column
-      prop="priceChange"
-      label="Price Change"
-    >
-      <template v-slot="{ row }">
-        <span>{{ row.priceChange }} %</span>
-      </template>
-    </el-table-column> -->
-
-    <el-table-column
-      prop="tradeVolume"
-      label="Volume 24H"
-      sortable
-    >
-      <template v-slot="{ row }">
-        <span>{{ formatAmount(row.tradeVolume) }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="totalLiquidity"
-      label="Total Deposited"
-      sortable
-    >
-      <template v-slot="{ row }">
-        <span>{{ formatAmount(row.totalLiquidity) }}</span>
-      </template>
-    </el-table-column>
+      <el-table-column
+        prop="totalLiquidity"
+        label="Total Deposited"
+        sortable
+      >
+        <template v-slot="{ row }">
+          <span>{{ formatAmount(row.totalLiquidity) }}</span>
+        </template>
+      </el-table-column>
+    </template>
   </ui-table>
 </template>
 

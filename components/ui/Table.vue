@@ -8,12 +8,7 @@
       style="width: 100%"
       class="ui-table"
     >
-      <template #header="{ column, $index }">
-        <slot name="header" v-bind="{ column, $index }"/>
-      </template>
-      <template #default="{ column, row, $index }">
-        <slot v-bind="{ column, row, $index }"/>
-      </template>
+      <slot v-bind="{ startIndex }" />
     </el-table>
     <el-pagination
       class="ui-pagination"

@@ -4,46 +4,48 @@
     :default-sort = "{prop: 'tvl', order: 'descending'}"
     style="width: 100%"
   >
-    <el-table-column
-      label="#"
-      width="64"
-    >
-      <template v-slot="{ $index }">
-        <span>{{ $index + 1 }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="Name"
-      sortable
-    />
-    <el-table-column
-      prop="tvl"
-      label="TVL"
-      sortable
-    >
-      <template v-slot="{ row }">
-        <span>${{ formatAmount(row.tvl) }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="dayVolume"
-      label="Volume 24H"
-      sortable
-    >
-      <template v-slot="{ row }">
-        <span>${{ formatAmount(row.dayVolume) }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="weekVolume"
-      label="Volume 7D"
-      sortable
-    >
-      <template v-slot="{ row }">
-        <span>${{ formatAmount(row.weekVolume) }}</span>
-      </template>
-    </el-table-column>
+    <template v-slot="{ startIndex }">
+      <el-table-column
+        label="#"
+        width="84"
+      >
+        <template v-slot="{ $index }">
+          <span>{{ startIndex + $index + 1 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="Name"
+        sortable
+      />
+      <el-table-column
+        prop="tvl"
+        label="TVL"
+        sortable
+      >
+        <template v-slot="{ row }">
+          <span>${{ formatAmount(row.tvl) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="dayVolume"
+        label="Volume 24H"
+        sortable
+      >
+        <template v-slot="{ row }">
+          <span>${{ formatAmount(row.dayVolume) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="weekVolume"
+        label="Volume 7D"
+        sortable
+      >
+        <template v-slot="{ row }">
+          <span>${{ formatAmount(row.weekVolume) }}</span>
+        </template>
+      </el-table-column>
+    </template>
   </ui-table>
 </template>
 
