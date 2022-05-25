@@ -1,4 +1,6 @@
-export const OverviewTokensQuery = `
+import { gql } from '@urql/core';
+
+export const OverviewTokensQuery = gql`
 query OverviewTokensQuery($timestamp: Int) {
   tokens {
     id

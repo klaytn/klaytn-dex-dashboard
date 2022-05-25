@@ -127,8 +127,8 @@ const formatTransactionData = (data) => {
     const token1 = tx.pair[`token${idxTo}`];
 
     const value = Math.max(
-      amount0 * +tx.pair[`token${idxFrom}Price`],
-      amount1 * +tx.pair[`token${idxTo}Price`],
+      amount0 * +token0.derivedUSD,
+      amount1 * +token1.derivedUSD,
     );
 
     return {
@@ -152,7 +152,7 @@ const formatTransactionData = (data) => {
   const amount1 = +tx.amount1;
   const token0 = tx.pair.token0;
   const token1 = tx.pair.token1;
-  const value = amount0 * +tx.pair.token0Price + amount1 * +tx.pair.token1Price;
+  const value = amount0 * +tx.pair.token0.derivedUSD + amount1 * +tx.pair.token1.derivedUSD;
 
   return {
     ...attrs,

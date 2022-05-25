@@ -1,6 +1,8 @@
-export const OverviewPoolsQuery = `
+import { gql } from '@urql/core';
+
+export const OverviewPoolsQuery = gql`
 query OverviewPoolsQuery($hourTimestamp: Int, $dayTimestamp: Int) {
-  pairs {
+  pairs(orderBy: reserveUSD, orderDirection: desc) {
     id
     name
     totalSupply

@@ -17,13 +17,11 @@
       <el-table-column
         prop="name"
         label="Name"
-        sortable
       />
 
       <el-table-column
         prop="price"
         label="Price"
-        sortable
       >
         <template v-slot="{ row }">
           <span>${{ formatAmount(row.price) }}</span>
@@ -33,7 +31,6 @@
       <el-table-column
         prop="priceChange"
         label="Price Change"
-        sortable
       >
         <template v-slot="{ row }">
           <span>{{ formatAmount(row.priceChange) }}%</span>
@@ -43,7 +40,6 @@
       <el-table-column
         prop="tradeVolume"
         label="Volume 24H"
-        sortable
       >
         <template v-slot="{ row }">
           <span>${{ formatAmount(row.tradeVolume) }}</span>
@@ -53,7 +49,6 @@
       <el-table-column
         prop="totalLiquidity"
         label="Total Deposited"
-        sortable
       >
         <template v-slot="{ row }">
           <span>${{ formatAmount(row.totalLiquidity) }}</span>

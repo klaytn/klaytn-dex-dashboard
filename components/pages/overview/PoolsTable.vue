@@ -1,7 +1,6 @@
 <template>
   <ui-table
     :data="data"
-    :default-sort = "{prop: 'tvl', order: 'descending'}"
     style="width: 100%"
   >
     <template v-slot="{ startIndex }">
@@ -13,33 +12,33 @@
           <span>{{ startIndex + $index + 1 }}</span>
         </template>
       </el-table-column>
+
       <el-table-column
         prop="name"
         label="Name"
-        sortable
       />
+
       <el-table-column
         prop="tvl"
         label="TVL"
-        sortable
       >
         <template v-slot="{ row }">
           <span>${{ formatAmount(row.tvl) }}</span>
         </template>
       </el-table-column>
+
       <el-table-column
         prop="dayVolume"
         label="Volume 24H"
-        sortable
       >
         <template v-slot="{ row }">
           <span>${{ formatAmount(row.dayVolume) }}</span>
         </template>
       </el-table-column>
+
       <el-table-column
         prop="weekVolume"
         label="Volume 7D"
-        sortable
       >
         <template v-slot="{ row }">
           <span>${{ formatAmount(row.weekVolume) }}</span>

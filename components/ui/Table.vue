@@ -12,14 +12,14 @@
     </el-table>
     <el-pagination
       class="ui-pagination"
-      layout="prev,slot,next"
+      layout="slot"
       :current-page="page"
       :page-size="pageSize"
       :total="total"
-      @prev-click="handlePage"
-      @next-click="handlePage"
     >
-      <div>Page {{ page }} of {{ pages }}</div>
+      <icon class="ui-pagination-control ui-pagination-control--prev" name="union" @click.native="handlePrev" />
+      <div class="ui-pagination-page">Page {{ page }} of {{ pages }}</div>
+      <icon class="ui-pagination-control ui-pagination-control--next" name="union" @click.native="handleNext" />
     </el-pagination>
   </ui-card>
 </template>
@@ -61,9 +61,12 @@ export default {
     }
   },
   methods: {
-    handlePage(num) {
-      this.page = num;
-    }
+    handlePrev() {
+      if (this.page > 1) this.page = this.page - 1;
+    },
+    handleNext() {
+      if (this.page < this.pages) this.page = this.page + 1;
+    },
   }
 }
 </script>
@@ -77,6 +80,23 @@ export default {
   font-size: 16px;
   line-height: 19px;
   color: $dark2;
+
+  &-page {
+    padding: 0 16px;
+  }
+
+  &-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+
+    &--next {
+      transform: rotate(180deg);
+    }
+  }
 }
 
 .ui-table {
