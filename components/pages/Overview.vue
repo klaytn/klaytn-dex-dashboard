@@ -277,7 +277,7 @@ export default {
     this.updateTokensData();
     this.updatePoolsData();
     this.updateTransactionsData();
-    this.updatefactoryVolumeData();
+    this.updateFactoryVolumeData();
     this.updateFactoryTotalLiquidityData();
   },
   methods: {
@@ -329,7 +329,7 @@ export default {
       }
     },
 
-    async updatefactoryVolumeData() {
+    async updateFactoryVolumeData() {
       try {
         this.factoryVolumeDataLoading = true;
         const { data: { factoryDayDatas } } = await SubgraphClient.query(OverviewFactoryDailyVolume).toPromise();
