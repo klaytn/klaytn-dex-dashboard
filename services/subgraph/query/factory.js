@@ -1,10 +1,19 @@
 import { gql } from '@urql/core';
 
-export const OverviewFactoryTotalTransactions = gql`
-query OverviewFactoryTotalTransactions {
+export const OverviewFactoryDailyVolume = gql`
+query OverviewFactoryDailyVolume {
   factoryDayDatas {
     timestamp
-    totalTransactions
+    dailyVolumeUSD
+  }
+}
+`
+
+export const OverviewFactoryTotalLiquidity = gql`
+query OverviewFactoryTotalLiquidity {
+  factoryDayDatas {
+    timestamp
+    totalLiquidityUSD
   }
 }
 `

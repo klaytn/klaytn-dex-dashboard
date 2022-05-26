@@ -5,12 +5,12 @@
       <div class="charts-items">
         <div class="chart-item">
           <ui-chart
-            :data="factoryTotalTransactionsData"
+            :data="factoryTotalLiquidityData"
             :spec="tvlSpec"
             :value-formatter="valueFormatter"
             :time-formatter="timeFormatter"
-            title="Total transactions"
-            v-loading="factoryTotalTransactionsDataLoading"
+            title="TVL"
+            v-loading="factoryTotalLiquidityDataLoading"
           />
         </div>
         <div class="chart-item">
@@ -20,7 +20,7 @@
             :value-formatter="valueFormatter"
             :time-formatter="volumeTimeFormatter"
             title="Volume"
-            v-loading="factoryTotalTransactionsDataLoading"
+            v-loading="factoryVolumeDataLoading"
           >
             <template #controls>
               <ui-tags v-model="activeVolumeTag" :tags="volumeTags" />
@@ -53,10 +53,11 @@ import SubgraphClient from '@/services/subgraph/client';
 import { OverviewTokensQuery } from '@/services/subgraph/query/tokens';
 import { OverviewPoolsQuery } from '@/services/subgraph/query/pools';
 import { OverviewTransactionsQuery } from '@/services/subgraph/query/transactions';
-import { OverviewFactoryTotalTransactions } from '@/services/subgraph/query/factory';
+import { OverviewFactoryDailyVolume, OverviewFactoryTotalLiquidity } from '@/services/subgraph/query/factory';
 import { TransactionTypes, DateTags } from '@/consts';
 
 import { factoryTvlChartSpec, factoryVolumeChartSpec } from '@/utils/chartSpecs';
+import { formatAmount } from '@/utils/formatters';
 
 dayjs.extend(dayOfYear);
 dayjs.extend(weekOfYear);
@@ -166,10 +167,17 @@ const formatTransactionData = (data) => {
   }
 };
 
-const formatFactoryTotalTransactionsData = (data) => {
+const formatfactoryVolumeData = (data) => {
   return {
     timestamp: +data.timestamp * 1000,
-    value: +data.totalTransactions,
+    value: +data.dailyVolumeUSD,
+  };
+};
+
+const formatFactoryTotalLiquidityData = (data) => {
+  return {
+    timestamp: +data.timestamp * 1000,
+    value: +data.totalLiquidityUSD,
   };
 };
 
@@ -220,8 +228,10 @@ export default {
       poolsDataLoading: true,
       transactionsData: [],
       transactionsDataLoading: true,
-      factoryTotalTransactionsData: [],
-      factoryTotalTransactionsDataLoading: true,
+      factoryVolumeData: [],
+      factoryVolumeDataLoading: true,
+      factoryTotalLiquidityData: [],
+      factoryTotalLiquidityDataLoading: true,
     }
   },
 
@@ -235,14 +245,15 @@ export default {
       },
     },
 
-    tvlSpec() {
-      return factoryTvlChartSpec(this.factoryTotalTransactionsData);
-    },
     valueFormatter() {
-      return (v) => v.value;
+      return (v) => `$${formatAmount(v.value)}`;
     },
     timeFormatter() {
       return (v) => dayjs(v.timestamp).format('MMM DD, YYYY');
+    },
+
+    tvlSpec() {
+      return factoryTvlChartSpec(this.factoryTotalLiquidityData);
     },
 
     volumeSpec() {
@@ -253,7 +264,7 @@ export default {
       return factoryVolumeChartSpec(this.volumeGroups, formatter);
     },
     volumeGroups() {
-      return groupFactoryDailyData(this.factoryTotalTransactionsData, this.activeVolumeTag);
+      return groupFactoryDailyData(this.factoryVolumeData, this.activeVolumeTag);
     },
     volumeTimeFormatter() {
       return this.activeVolumeTag === DateTags.daily
@@ -266,7 +277,8 @@ export default {
     this.updateTokensData();
     this.updatePoolsData();
     this.updateTransactionsData();
-    this.updateFactoryTotalTransactionsData();
+    this.updatefactoryVolumeData();
+    this.updateFactoryTotalLiquidityData();
   },
   methods: {
     async updateTokensData() {
@@ -311,22 +323,35 @@ export default {
         this.transactionsData = transactions.map(data => formatTransactionData(data));
       } catch (error) {
         console.error(error);
-        this.poolsData = [];
+        this.transactionsData = [];
       } finally {
         this.transactionsDataLoading = false;
       }
     },
 
-    async updateFactoryTotalTransactionsData() {
+    async updatefactoryVolumeData() {
       try {
-        this.factoryTotalTransactionsDataLoading = true;
-        const { data: { factoryDayDatas } } = await SubgraphClient.query(OverviewFactoryTotalTransactions).toPromise();
-        this.factoryTotalTransactionsData = factoryDayDatas.map(data => formatFactoryTotalTransactionsData(data));
+        this.factoryVolumeDataLoading = true;
+        const { data: { factoryDayDatas } } = await SubgraphClient.query(OverviewFactoryDailyVolume).toPromise();
+        this.factoryVolumeData = factoryDayDatas.map(data => formatfactoryVolumeData(data));
       } catch (error) {
         console.error(error);
-        this.poolsData = [];
+        this.factoryVolumeData = [];
       } finally {
-        this.factoryTotalTransactionsDataLoading = false;
+        this.factoryVolumeDataLoading = false;
+      }
+    },
+
+    async updateFactoryTotalLiquidityData() {
+      try {
+        this.factoryTotalLiquidityDataLoading = true;
+        const { data: { factoryDayDatas } } = await SubgraphClient.query(OverviewFactoryTotalLiquidity).toPromise();
+        this.factoryTotalLiquidityData = factoryDayDatas.map(data => formatFactoryTotalLiquidityData(data));
+      } catch (error) {
+        console.error(error);
+        this.factoryTotalLiquidityData = [];
+      } finally {
+        this.factoryTotalLiquidityDataLoading = false;
       }
     }
   }

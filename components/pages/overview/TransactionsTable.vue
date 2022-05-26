@@ -64,6 +64,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 import { TransactionTypes } from '@/consts';
+import { formatAmount } from '@/utils/formatters';
 
 dayjs.extend(relativeTime);
 
@@ -78,6 +79,8 @@ export default {
   data() {
     return {
       activeType: TransactionTypes.all,
+      // formatters
+      formatAmount,
     }
   },
   computed: {
@@ -103,17 +106,6 @@ export default {
       this.activeType = type;
     },
 
-    formatAmount(amount) {
-      const val = Number(amount);
-
-      if (Math.trunc(val / 1_000_000) > 0) {
-        return `${(val / 1_000_000).toFixed(2)}M`;
-      } else if (Math.trunc(val / 1_000) > 0) {
-        return `${(val / 1_000).toFixed(2)}K`;
-      }
-
-      return String(val.toFixed(2));
-    },
     formatTime(timestamp) {
       return dayjs().to(dayjs(timestamp));
     },
