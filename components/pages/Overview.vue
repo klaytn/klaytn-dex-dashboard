@@ -53,7 +53,7 @@ import SubgraphClient from '@/services/subgraph/client';
 import { OverviewTokensQuery } from '@/services/subgraph/query/tokens';
 import { OverviewPoolsQuery } from '@/services/subgraph/query/pools';
 import { OverviewTransactionsQuery } from '@/services/subgraph/query/transactions';
-import { OverviewFactoryDailyVolume, OverviewFactoryTotalLiquidity } from '@/services/subgraph/query/factory';
+import { OverviewFactoryDailyVolume, OverviewFactoryTotalLiquidity, PairDayDatas } from '@/services/subgraph/query/factory';
 import { TransactionTypes, DateTags } from '@/consts';
 
 import { factoryTvlChartSpec, factoryVolumeChartSpec } from '@/utils/chartSpecs';
@@ -215,6 +215,33 @@ const groupFactoryDailyData = (data, dateTag) => {
   }, []);
 };
 
+const groupPairDayDatas = (data) => {
+  const timestamps = {};
+  const pairs = {};
+
+  data.forEach(item => {
+    timestamps[item.timestamp] = {};
+    pairs[item.pair.id] = true;
+  });
+
+  Object.keys(pairs).forEach(pair => {
+    const snaps = data.filter(item => item.pair.id === pair);
+
+    snaps.forEach(snap => {
+      Object.entries(timestamps).forEach(([timestamp, value]) => {
+        if (!value[pair] || +timestamp <= +snap.timestamp) {
+          value[pair] = +snap.reserveUSD;
+        }
+      });
+    });
+  });
+
+  return Object.entries(timestamps).map(([key, value]) => ({
+    timestamp: key * 1000,
+    value: Object.values(value).reduce((acc, v) => acc + v, 0),
+  }));
+};
+
 export default {
   name: "OverviewPage",
   data() {
@@ -345,8 +372,8 @@ export default {
     async updateFactoryTotalLiquidityData() {
       try {
         this.factoryTotalLiquidityDataLoading = true;
-        const { data: { factoryDayDatas } } = await SubgraphClient.query(OverviewFactoryTotalLiquidity).toPromise();
-        this.factoryTotalLiquidityData = factoryDayDatas.map(data => formatFactoryTotalLiquidityData(data));
+        const { data: { pairDayDatas } } = await SubgraphClient.query(PairDayDatas).toPromise();
+        this.factoryTotalLiquidityData = groupPairDayDatas(pairDayDatas);
       } catch (error) {
         console.error(error);
         this.factoryTotalLiquidityData = [];

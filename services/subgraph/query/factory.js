@@ -17,3 +17,15 @@ query OverviewFactoryTotalLiquidity {
   }
 }
 `
+
+export const PairDayDatas = gql`
+query PairDayDatas {
+  pairDayDatas(orderBy: timestamp, orderDirection: desc) {
+    reserveUSD
+    timestamp
+    pair {
+      id
+    }
+  }
+}
+`;
