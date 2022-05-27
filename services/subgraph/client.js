@@ -5,7 +5,7 @@ import { createClient, defaultExchanges } from '@urql/core';
 // https://graph.ipfs1.dev.infra.soramitsu.co.jp/subgraphs/name/klaytn-subgraph/exchange
 
 const SubgraphClient = createClient({
-  url: 'https://graph.ipfs1.dev.infra.soramitsu.co.jp/subgraphs/name/klaytn-subgraph/exchange',
+  url: process.env.subgraphEndpoint,
   // the default:
   exchanges: defaultExchanges,
 });

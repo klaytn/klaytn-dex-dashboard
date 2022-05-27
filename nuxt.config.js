@@ -1,4 +1,8 @@
 export default {
+  env: {
+    subgraphEndpoint: process.env.SUBGRAPH_ENDPOINT || 'https://graph.ipfs1.dev.infra.soramitsu.co.jp/subgraphs/name/klaytn-subgraph/exchange'
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: "klaytn",
