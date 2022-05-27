@@ -224,13 +224,15 @@ const groupPairDayDatas = (data) => {
     pairs[item.pair.id] = true;
   });
 
+  const timestampsOrderedByDesc = Object.keys(timestamps).sort().reverse();
+
   Object.keys(pairs).forEach(pair => {
     const snaps = data.filter(item => item.pair.id === pair);
 
     snaps.forEach(snap => {
-      Object.entries(timestamps).forEach(([timestamp, value]) => {
-        if (!value[pair] || +timestamp <= +snap.timestamp) {
-          value[pair] = +snap.reserveUSD;
+      timestampsOrderedByDesc.forEach((timestamp) => {
+        if (!timestamps[timestamp][pair] || +timestamp <= +snap.timestamp) {
+          timestamps[timestamp][pair] = +snap.reserveUSD;
         }
       });
     });
