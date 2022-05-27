@@ -1,7 +1,7 @@
 <template>
   <ui-table
     :data="data"
-    :default-sort = "{prop: 'totalLiquidity', order: 'descending'}"
+    :page.sync="page"
     style="width: 100%"
   >
     <template v-slot="{ startIndex }">
@@ -71,6 +71,7 @@ export default {
   },
   data() {
     return {
+      page: 1,
       formatAmount
     };
   },

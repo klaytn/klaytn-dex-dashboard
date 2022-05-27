@@ -17,6 +17,7 @@
 
     <div class="layout-main">
       <Nuxt />
+      <ui-scroll-top class="scroll-btn" />
     </div>
   </main>
 </template>
@@ -95,6 +96,12 @@ export default {
     & svg {
       margin-right: 8px;
     }
+  }
+
+  .scroll-btn {
+    position: fixed;
+    bottom: 64px;
+    right: 24px;
   }
 }
 </style>

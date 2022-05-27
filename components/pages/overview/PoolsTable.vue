@@ -1,6 +1,7 @@
 <template>
   <ui-table
     :data="data"
+    :page.sync="page"
     style="width: 100%"
   >
     <template v-slot="{ startIndex }">
@@ -61,6 +62,7 @@ export default {
   },
   data() {
     return {
+      page: 1,
       formatAmount
     };
   },

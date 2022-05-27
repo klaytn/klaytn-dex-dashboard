@@ -37,10 +37,9 @@ export default {
       type: Number,
       default: 10,
     },
-  },
-  data() {
-    return {
-      page: 1
+    page: {
+      type: Number,
+      default: 1,
     }
   },
   computed: {
@@ -62,10 +61,10 @@ export default {
   },
   methods: {
     handlePrev() {
-      if (this.page > 1) this.page = this.page - 1;
+      if (this.page > 1) this.$emit('update:page', this.page - 1);
     },
     handleNext() {
-      if (this.page < this.pages) this.page = this.page + 1;
+      if (this.page < this.pages) this.$emit('update:page', this.page + 1);
     },
   }
 }

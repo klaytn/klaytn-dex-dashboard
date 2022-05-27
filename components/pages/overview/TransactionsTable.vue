@@ -1,6 +1,7 @@
 <template>
   <ui-table
     :data="items"
+    :page.sync="page"
     style="width: 100%"
   >
     <el-table-column width="252">
@@ -69,7 +70,7 @@ import { formatAmount } from '@/utils/formatters';
 dayjs.extend(relativeTime);
 
 export default {
-  name: "TokensTable",
+  name: "TransactionsTable",
   props: {
     data: {
       type: Array,
@@ -78,6 +79,7 @@ export default {
   },
   data() {
     return {
+      page: 1,
       activeType: TransactionTypes.all,
       // formatters
       formatAmount,
@@ -90,6 +92,7 @@ export default {
       },
       set(value) {
         this.activeType = value;
+        this.page = 1;
       }
     },
     types() {
@@ -102,10 +105,6 @@ export default {
     }
   },
   methods: {
-    setActiveType(type) {
-      this.activeType = type;
-    },
-
     formatTime(timestamp) {
       return dayjs().to(dayjs(timestamp));
     },
