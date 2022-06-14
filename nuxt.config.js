@@ -1,0 +1,90 @@
+export default {
+  env: {
+    subgraphEndpoint: process.env.SUBGRAPH_ENDPOINT || 'https://graph.ipfs1.dev.infra.soramitsu.co.jp/subgraphs/name/klaytn-subgraph/exchange'
+  },
+
+  // Global page headers: https://go.nuxtjs.dev/config-head
+  head: {
+    title: "klaytn",
+    htmlAttrs: {
+      lang: "en",
+    },
+    meta: [
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { hid: "description", name: "description", content: "" },
+      { name: "format-detection", content: "telephone=no" },
+    ],
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+  },
+
+  // Global CSS: https://go.nuxtjs.dev/config-css
+  css: [
+    "~assets/scss/main.css",
+    "~assets/scss/vars.scss",
+    "~assets/scss/bulma.scss",
+    "~assets/scss/element.scss",
+  ],
+
+  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
+  plugins: ["~/plugins/element.js", "~/plugins/echarts.js"],
+
+  router: {
+    mode: 'hash'
+  },
+
+  // Auto import components: https://go.nuxtjs.dev/config-components
+  components: true,
+
+  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
+  buildModules: ["@nuxtjs/svg", "@nuxtjs/composition-api/module"],
+
+  // serverMiddleware: {
+  //   "/api": "~/api",
+  // },
+
+  // Modules: https://go.nuxtjs.dev/config-modules
+  modules: ["@nuxtjs/i18n", "@nuxtjs/style-resources"],
+
+  styleResources: {
+    scss: ["./assets/scss/vars.scss"],
+  },
+
+  ssr: false, // Disable Server Side rendering
+
+  i18n: {
+    locales: ["en", "fr", "es"],
+    defaultLocale: "en",
+    vueI18n: {
+      fallbackLocale: "en",
+      messages: {
+        en: {
+          welcome: "Welcome {projectName}",
+          lorem:
+            "Carrot manager, increased discounts. For, the mind, the body is held to choose what prevents them from themselves, at least, we foresee, these pleasures, pleasure. Nor is it to explain what hate responses?",
+        },
+        fr: {
+          welcome: "Bienvenue {projectName}",
+          lorem:
+            "Gestionnaire de carottes, réductions accrues. Car, l'esprit, le corps est tenu de choisir ce qui les empêche d'eux-mêmes, du moins, nous le prévoyons, ces plaisirs, le plaisir. Ce n'est pas non plus pour expliquer quelles réponses haineuses?",
+        },
+        es: {
+          welcome: "Bienvenido {projectName}",
+          lorem:
+            "Gerente de zanahoria, mayores descuentos. Porque, la mente, el cuerpo se lleva a cabo para elegir lo que les impide de sí mismos, al menos, prevemos, estos placeres, placer. ¿Tampoco es para explicar qué respuestas de odio?",
+        },
+      },
+    },
+  },
+
+  // Build Configuration: https://go.nuxtjs.dev/config-build
+  build: {
+    loaders: {
+      scss: {
+        sassOptions: {
+          quietDeps: true
+        }
+      }
+    }
+  },
+}
