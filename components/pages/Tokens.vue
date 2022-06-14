@@ -1,5 +1,10 @@
 <template>
-  <div>Tokens Page</div>
+  <ui-container>
+    <ui-title>
+      <div>Tokens</div>
+    </ui-title>
+    <shared-tokens-table />
+  </ui-container>
 </template>
 
 <script>

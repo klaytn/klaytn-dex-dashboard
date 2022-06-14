@@ -27,7 +27,7 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ["~/plugins/element.js", "~/plugins/echarts.js"],
+  plugins: ["~/plugins/element.js", "~/plugins/echarts.js", "~/plugins/dayjs.js"],
 
   router: {
     mode: 'hash'

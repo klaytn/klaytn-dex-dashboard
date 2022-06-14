@@ -1,5 +1,11 @@
 <template>
-  <div>Pools page</div>
+  <ui-container>
+    <ui-title>
+      <div>Top Pools</div>
+      <ui-link :to="{ name: 'pools' }">All pools</ui-link>
+    </ui-title>
+    <shared-pools-table />
+  </ui-container>
 </template>
 
 <script>
