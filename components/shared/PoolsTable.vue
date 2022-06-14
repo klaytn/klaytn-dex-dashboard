@@ -18,7 +18,11 @@
       <el-table-column
         prop="name"
         label="Name"
-      />
+      >
+        <template v-slot="{ row }">
+          <nuxt-link :to="{ name: 'pools-id', params: { id: row.id } }">{{ row.name }}</nuxt-link>
+        </template>
+      </el-table-column>
 
       <el-table-column
         prop="tvl"
