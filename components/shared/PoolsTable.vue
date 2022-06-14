@@ -96,6 +96,12 @@ const formatData = (data) => {
 
 export default {
   name: "PoolsTable",
+  props: {
+    token: {
+      type: String,
+      default: '',
+    }
+  },
   data() {
     return {
       items: [],
@@ -113,19 +119,33 @@ export default {
       const dayTimestamp = dayjs().startOf('hour').unix() - 7 * 24 * 60 * 60;
       // 1 days before
       const hourTimestamp = dayjs().startOf('hour').unix() - 24 * 60 * 60;
+      // common vars
       const vars = { dayTimestamp, hourTimestamp };
+      // filter
+      const whereClauses = this.token ? ['token0', 'token1'].map(attr => ({ [attr]: this.token })) : undefined;
 
+      this.loading = true;
+
+      if (whereClauses) {
+        const pools = await Promise.all(whereClauses.map(where => this.getPools({ ...vars, where })));
+
+        this.items = pools.flat();
+      } else {
+        this.items = await this.getPools(vars);
+      }
+
+      this.loading = false;
+    },
+
+    async getPools(vars) {
       try {
-        this.loading = true;
         const { data: { pairs } } = await SubgraphClient.query(OverviewPoolsQuery, vars).toPromise();
-        this.items = pairs.map(data => formatData(data));
+        return pairs.map(data => formatData(data));
       } catch (error) {
         console.error(error);
-        this.items = [];
-      } finally {
-        this.loading = false;
+        return [];
       }
-    },
+    }
   }
 }
 </script>
