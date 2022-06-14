@@ -1,8 +1,8 @@
 import { gql } from '@urql/core';
 
 export const OverviewTokensQuery = gql`
-query OverviewTokensQuery($timestamp: Int) {
-  tokens {
+query OverviewTokensQuery($first: Int = 50, $timestamp: Int) {
+  tokens(first: $first) {
     id
     name
     symbol

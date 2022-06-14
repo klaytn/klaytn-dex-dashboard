@@ -1,7 +1,9 @@
 <template>
   <div>
-    <div class="basic-container">
-      <ui-title>Dex overview</ui-title>
+    <ui-container>
+      <ui-title>
+        <div>Dex overview</div>
+      </ui-title>
       <div class="charts-items">
         <div class="chart-item">
           <ui-chart
@@ -28,19 +30,27 @@
           </ui-chart>
         </div>
       </div>
-    </div>
-    <div class="basic-container">
-      <ui-title>Top Tokens</ui-title>
+    </ui-container>
+    <ui-container>
+      <ui-title>
+        <div>Tokens</div>
+        <ui-link :to="{ name: 'tokens' }">All tokens</ui-link>
+      </ui-title>
       <pages-overview-tokens-table :data="tokensData" v-loading="tokensDataLoading" />
-    </div>
-    <div class="basic-container">
-      <ui-title>Top Pools</ui-title>
+    </ui-container>
+    <ui-container>
+      <ui-title>
+        <div>Top Pools</div>
+        <ui-link :to="{ name: 'pools' }">All pools</ui-link>
+      </ui-title>
       <pages-overview-pools-table :data="poolsData" v-loading="poolsDataLoading" />
-    </div>
-    <div class="basic-container">
-      <ui-title>Transactions</ui-title>
+    </ui-container>
+    <ui-container>
+      <ui-title>
+        <div>Transactions</div>
+      </ui-title>
       <pages-overview-transactions-table :data="transactionsData" v-loading="transactionsDataLoading" />
-    </div>
+    </ui-container>
   </div>
 </template>
 
