@@ -49,7 +49,7 @@
       <ui-title>
         <div>Transactions</div>
       </ui-title>
-      <pages-overview-transactions-table :data="transactionsData" v-loading="transactionsDataLoading" />
+      <shared-transactions-table />
     </ui-container>
   </div>
 </template>
@@ -59,69 +59,11 @@ import dayjs from 'dayjs';
 
 import SubgraphClient from '@/services/subgraph/client';
 
-import { OverviewTransactionsQuery } from '@/services/subgraph/query/transactions';
 import { OverviewFactoryDailyVolume, OverviewFactoryTotalLiquidity, PairDayDatas } from '@/services/subgraph/query/factory';
-import { TransactionTypes, DateTags } from '@/consts';
+import { DateTags } from '@/consts';
 
 import { factoryTvlChartSpec, factoryVolumeChartSpec } from '@/utils/chartSpecs';
 import { formatAmount } from '@/utils/formatters';
-
-const formatTransactionData = (data) => {
-  let attrs = {
-    id: data.id,
-    timestamp: +data.timestamp * 1000,
-  };
-
-  if (data.swaps.length !== 0) {
-    const tx = data.swaps[0];
-    const from = tx.from;
-    const idxFrom = Number(+tx.amount0In === 0);
-    const idxTo = Number(!idxFrom);
-
-    const amount0 = +tx[`amount${idxFrom}In`];
-    const amount1 = +tx[`amount${idxTo}Out`];
-    const token0 = tx.pair[`token${idxFrom}`];
-    const token1 = tx.pair[`token${idxTo}`];
-
-    const value = Math.max(
-      amount0 * +token0.derivedUSD,
-      amount1 * +token1.derivedUSD,
-    );
-
-    return {
-      ...attrs,
-      from,
-      value,
-      amount0,
-      amount1,
-      token0,
-      token1,
-      type: TransactionTypes.swap,
-    }
-  }
-
-  const type = data.mints.length !== 0 ? TransactionTypes.add : TransactionTypes.remove;
-  const prop = data.mints.length !== 0 ? 'mints' : 'burns';
-
-  const tx = data[prop][0];
-  const from = tx.to;
-  const amount0 = +tx.amount0;
-  const amount1 = +tx.amount1;
-  const token0 = tx.pair.token0;
-  const token1 = tx.pair.token1;
-  const value = amount0 * +tx.pair.token0.derivedUSD + amount1 * +tx.pair.token1.derivedUSD;
-
-  return {
-    ...attrs,
-    from,
-    value,
-    amount0,
-    amount1,
-    token0,
-    token1,
-    type,
-  }
-};
 
 const formatfactoryVolumeData = (data) => {
   return {
@@ -207,9 +149,6 @@ export default {
       volumeTag: DateTags.daily,
       volumeTags: Object.values(DateTags),
 
-      transactionsData: [],
-      transactionsDataLoading: true,
-
       factoryVolumeData: [],
       factoryVolumeDataLoading: true,
 
@@ -257,24 +196,10 @@ export default {
   },
 
   mounted() {
-    this.updateTransactionsData();
     this.updateFactoryVolumeData();
     this.updateFactoryTotalLiquidityData();
   },
   methods: {
-    async updateTransactionsData() {
-      try {
-        this.transactionsDataLoading = true;
-        const { data: { transactions } } = await SubgraphClient.query(OverviewTransactionsQuery).toPromise();
-        this.transactionsData = transactions.map(data => formatTransactionData(data));
-      } catch (error) {
-        console.error(error);
-        this.transactionsData = [];
-      } finally {
-        this.transactionsDataLoading = false;
-      }
-    },
-
     async updateFactoryVolumeData() {
       try {
         this.factoryVolumeDataLoading = true;

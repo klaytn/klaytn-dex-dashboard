@@ -16,3 +16,16 @@ query OverviewTokensQuery($timestamp: Int) {
   }
 }
 `;
+
+export const TokenPairsQuery = gql`
+query TokenPairsQuery($id: ID!) {
+  token(id: $id) {
+    pairBase {
+      id
+    }
+    pairQuote {
+      id
+    }
+  }
+}
+`;

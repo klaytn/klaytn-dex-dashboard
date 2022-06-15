@@ -8,6 +8,13 @@
       </ui-title>
       <shared-pools-table :token="id" />
     </ui-container>
+
+    <ui-container>
+      <ui-title>
+        <div>Transactions</div>
+      </ui-title>
+      <shared-transactions-table :token="id" />
+    </ui-container>
   </div>
 </template>
 

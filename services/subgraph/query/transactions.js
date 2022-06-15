@@ -50,3 +50,45 @@ query OverviewTransactionsQuery ($first: Int = 50) {
 }
 ${PairTokensFragment}
 `;
+
+export const TransactionsByPairsQuery = gql`
+query TransactionsByPairsQuery ($pairs: [String!]) {
+  transactions(orderBy: timestamp, orderDirection: desc) {
+    id
+    timestamp
+    swaps(
+      where: { pair_in: $pairs }
+    ) {
+      amount0In
+      amount0Out
+      amount1In
+      amount1Out
+      from
+      pair {
+        ...PairTokensFragment
+      }
+    }
+    mints(
+      where: { pair_in: $pairs }
+    ) {
+      amount0
+      amount1
+      to
+      pair {
+        ...PairTokensFragment
+      }
+    }
+    burns(
+      where: { pair_in: $pairs }
+    ) {
+      amount0
+      amount1
+      to
+      pair {
+        ...PairTokensFragment
+      }
+    }
+  }
+}
+${PairTokensFragment}
+`;

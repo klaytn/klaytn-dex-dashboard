@@ -137,7 +137,7 @@ export default {
       this.loading = false;
     },
 
-    async getPools(vars) {
+    async getPools(vars = {}) {
       try {
         const { data: { pairs } } = await SubgraphClient.query(OverviewPoolsQuery, vars).toPromise();
         return pairs.map(data => formatData(data));
