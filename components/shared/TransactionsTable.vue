@@ -1,8 +1,8 @@
 <template>
   <ui-table
-    v-loading="loading"
-    :data="filteredItems"
     :page.sync="page"
+    :data="filteredItems"
+    :loading="loading"
     style="width: 100%"
   >
     <el-table-column width="252">
@@ -64,98 +64,28 @@
 <script>
 import dayjs from 'dayjs';
 
-import SubgraphClient from '@/services/subgraph/client';
-
-import { OverviewTransactionsQuery, TransactionsByPairsQuery } from '@/services/subgraph/query/transactions';
-import { TokenPairsQuery } from '@/services/subgraph/query/tokens';
 import { TransactionTypes } from '@/consts';
 import { formatAmount } from '@/utils/formatters';
-
-const formatData = (data) => {
-  let attrs = {
-    id: data.id,
-    timestamp: +data.timestamp * 1000,
-  };
-
-  if (data.swaps.length !== 0) {
-    const tx = data.swaps[0];
-    const from = tx.from;
-    const idxFrom = Number(+tx.amount0In === 0);
-    const idxTo = Number(!idxFrom);
-
-    const amount0 = +tx[`amount${idxFrom}In`];
-    const amount1 = +tx[`amount${idxTo}Out`];
-    const token0 = tx.pair[`token${idxFrom}`];
-    const token1 = tx.pair[`token${idxTo}`];
-
-    const value = Math.max(
-      amount0 * +token0.derivedUSD,
-      amount1 * +token1.derivedUSD,
-    );
-
-    return {
-      ...attrs,
-      from,
-      value,
-      amount0,
-      amount1,
-      token0,
-      token1,
-      type: TransactionTypes.swap,
-    }
-  }
-
-  if (data.mints.length !== 0 || data.burns.length !== 0) {
-    const type = data.mints.length !== 0 ? TransactionTypes.add : TransactionTypes.remove;
-    const prop = data.mints.length !== 0 ? 'mints' : 'burns';
-
-    const tx = data[prop][0];
-    const from = tx.to;
-    const amount0 = +tx.amount0;
-    const amount1 = +tx.amount1;
-    const token0 = tx.pair.token0;
-    const token1 = tx.pair.token1;
-    const value = amount0 * +tx.pair.token0.derivedUSD + amount1 * +tx.pair.token1.derivedUSD;
-
-    return {
-      ...attrs,
-      from,
-      value,
-      amount0,
-      amount1,
-      token0,
-      token1,
-      type,
-    }
-  }
-
-  return null;
-};
-
-const getPairIdsFromTokenData = (data) => {
-  return [...data.pairBase, ...data.pairQuote].map(pair => pair.id);
-};
 
 export default {
   name: "TransactionsTable",
   props: {
-    token: {
-      type: String,
-      default: '',
-    }
+    data: {
+      type: Array,
+      default: () => ([]),
+    },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
-      items: [],
-      loading: false,
       page: 1,
       activeType: TransactionTypes.all,
       // formatters
       formatAmount,
     }
-  },
-  mounted() {
-    this.updateData();
   },
   computed: {
     type: {
@@ -171,9 +101,9 @@ export default {
       return Object.values(TransactionTypes);
     },
     filteredItems() {
-      if (this.activeType === TransactionTypes.all) return this.items;
+      if (this.activeType === TransactionTypes.all) return this.data;
 
-      return this.items.filter(item => item.type === this.activeType);
+      return this.data.filter(item => item.type === this.activeType);
     }
   },
   methods: {
@@ -186,30 +116,6 @@ export default {
     formatType(type) {
       return type === TransactionTypes.swap ? 'for' : 'and';
     },
-
-    async updateData() {
-      this.loading = true;
-
-      if (this.token) {
-        const { data: { token } } = await SubgraphClient.query(TokenPairsQuery, { id: this.token }).toPromise();
-        const pairs = getPairIdsFromTokenData(token);
-        this.items = await this.getTransactions(TransactionsByPairsQuery, { pairs });
-      } else {
-        this.items = await this.getTransactions();
-      }
-
-      this.loading = false;
-    },
-
-    async getTransactions(query = OverviewTransactionsQuery, vars = {}) {
-      try {
-        const { data: { transactions } } = await SubgraphClient.query(query, vars).toPromise();
-        return transactions.map(data => formatData(data)).filter(item => !!item);
-      } catch (error) {
-        console.error(error);
-        return [];
-      }
-    }
   },
 }
 </script>

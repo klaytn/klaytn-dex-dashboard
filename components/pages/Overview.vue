@@ -36,20 +36,20 @@
         <div>Tokens</div>
         <ui-link :to="{ name: 'tokens' }">All tokens</ui-link>
       </ui-title>
-      <shared-tokens-table />
+      <shared-tokens-table :loading="tokensLoading" :data="tokens" />
     </ui-container>
     <ui-container>
       <ui-title>
         <div>Top Pools</div>
         <ui-link :to="{ name: 'pools' }">All pools</ui-link>
       </ui-title>
-      <shared-pools-table />
+      <shared-pools-table :loading="pairsLoading" :data="pairs" />
     </ui-container>
     <ui-container>
       <ui-title>
         <div>Transactions</div>
       </ui-title>
-      <shared-transactions-table />
+      <shared-transactions-table :loading="transactionsLoading" :data="transactions" />
     </ui-container>
   </div>
 </template>
@@ -58,6 +58,7 @@
 import dayjs from 'dayjs';
 
 import SubgraphClient from '@/services/subgraph/client';
+import { TokensExplorer, PairsExplorer, TransactionsExplorer } from '@/services/subgraph/explorer';
 
 import { OverviewFactoryDailyVolume, OverviewFactoryTotalLiquidity, PairDayDatas } from '@/services/subgraph/query/factory';
 import { DateTags } from '@/consts';
@@ -149,6 +150,15 @@ export default {
       volumeTag: DateTags.daily,
       volumeTags: Object.values(DateTags),
 
+      tokens: [],
+      tokensLoading: false,
+
+      pairs: [],
+      pairsLoading: false,
+
+      transactions: [],
+      transactionsLoading: false,
+
       factoryVolumeData: [],
       factoryVolumeDataLoading: true,
 
@@ -198,8 +208,40 @@ export default {
   mounted() {
     this.updateFactoryVolumeData();
     this.updateFactoryTotalLiquidityData();
+
+    this.updateTokens();
+    this.updatePairs();
+    this.updateTransactions();
   },
   methods: {
+    async updateTokens() {
+      // two days before
+      const timestamp = dayjs().startOf('hour').unix() - 2 * 24 * 60 * 60;
+
+      this.tokensLoading = true;
+      this.tokens = await TokensExplorer.getTokens({ timestamp });
+      this.tokensLoading = false;
+    },
+
+    async updatePairs() {
+      // 7 days before
+      const dayTimestamp = dayjs().startOf('hour').unix() - 7 * 24 * 60 * 60;
+      // 1 days before
+      const hourTimestamp = dayjs().startOf('hour').unix() - 24 * 60 * 60;
+      // common vars
+      const vars = { dayTimestamp, hourTimestamp };
+
+      this.pairsLoading = true;
+      this.pairs = await PairsExplorer.getPairs(vars);
+      this.pairsLoading = false;
+    },
+
+    async updateTransactions() {
+      this.transactionsLoading = true;
+      this.transactions = await TransactionsExplorer.getTransactions();
+      this.transactionsLoading = false;
+    },
+
     async updateFactoryVolumeData() {
       try {
         this.factoryVolumeDataLoading = true;

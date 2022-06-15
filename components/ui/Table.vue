@@ -1,5 +1,5 @@
 <template>
-  <ui-card>
+  <ui-card v-loading="loading">
     <el-table
       :data="items"
       size="big"
@@ -31,7 +31,11 @@ export default {
   props: {
     data: {
       type: Array,
-      required: true,
+      default: () => ([]),
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
     pageSize: {
       type: Number,

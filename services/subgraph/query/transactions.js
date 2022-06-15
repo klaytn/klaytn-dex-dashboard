@@ -52,41 +52,43 @@ ${PairTokensFragment}
 `;
 
 export const TransactionsByPairsQuery = gql`
-query TransactionsByPairsQuery ($pairs: [String!]) {
-  transactions(orderBy: timestamp, orderDirection: desc) {
-    id
-    timestamp
-    swaps(
-      where: { pair_in: $pairs }
-    ) {
-      amount0In
-      amount0Out
-      amount1In
-      amount1Out
-      from
-      pair {
-        ...PairTokensFragment
-      }
+query TransactionsByPairsQuery ($first: Int = 1000, $pairs: [String!]) {
+  swaps(first: $first, orderBy: timestamp, orderDirection: desc, where: { pair_in: $pairs }) {
+    amount0In
+    amount0Out
+    amount1In
+    amount1Out
+    from
+    pair {
+      ...PairTokensFragment
     }
-    mints(
-      where: { pair_in: $pairs }
-    ) {
-      amount0
-      amount1
-      to
-      pair {
-        ...PairTokensFragment
-      }
+    transaction {
+      id
+      timestamp
     }
-    burns(
-      where: { pair_in: $pairs }
-    ) {
-      amount0
-      amount1
-      to
-      pair {
-        ...PairTokensFragment
-      }
+  }
+  mints(first: $first, orderBy: timestamp, orderDirection: desc, where: { pair_in: $pairs }) {
+    amount0
+    amount1
+    to
+    pair {
+      ...PairTokensFragment
+    }
+    transaction {
+      id
+      timestamp
+    }
+  }
+  burns(first: $first, orderBy: timestamp, orderDirection: desc, where: { pair_in: $pairs }) {
+    amount0
+    amount1
+    to
+    pair {
+      ...PairTokensFragment
+    }
+    transaction {
+      id
+      timestamp
     }
   }
 }

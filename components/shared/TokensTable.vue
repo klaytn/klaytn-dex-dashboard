@@ -1,8 +1,8 @@
 <template>
   <ui-table
-    v-loading="loading"
-    :data="items"
     :page.sync="page"
+    :data="data"
+    :loading="loading"
     style="width: 100%"
   >
     <template v-slot="{ startIndex }">
@@ -64,58 +64,25 @@
 </template>
 
 <script>
-import dayjs from 'dayjs';
-
-import SubgraphClient from '@/services/subgraph/client';
-import { OverviewTokensQuery } from '@/services/subgraph/query/tokens';
-
 import { formatAmount } from '@/utils/formatters';
-
-const formatData = (data) => {
-  const tradeVolume = Number(data.dayData[0]?.dailyVolumeToken ?? 0);
-  const totalLiquidity = Number(data.totalLiquidity);
-  const price = Number(data.derivedUSD);
-  const lastPrice = Number(data.dayData[1]?.priceUSD ?? 0);
-  const priceChange = lastPrice !== 0 ? (price - lastPrice) * 100 / lastPrice : 0;
-
-  return {
-    ...data,
-    price,
-    priceChange,
-    tradeVolume: tradeVolume * price,
-    totalLiquidity: totalLiquidity * price,
-  };
-};
 
 export default {
   name: "TokensTable",
+  props: {
+    data: {
+      type: Array,
+      default: () => ([]),
+    },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
-      items: [],
-      loading: false,
       page: 1,
       formatAmount
     };
   },
-  mounted() {
-    this.updateData();
-  },
-  methods: {
-     async updateData() {
-      // two days before
-      const timestamp = dayjs().startOf('hour').unix() - 2 * 24 * 60 * 60;
-      const vars = { timestamp };
-      try {
-        this.loading = true;
-        const { data: { tokens } } = await SubgraphClient.query(OverviewTokensQuery, vars).toPromise();
-        this.items = tokens.map(data => formatData(data));
-      } catch (error) {
-        console.error(error);
-        this.items = [];
-      } finally {
-        this.loading = false;
-      }
-    },
-  }
 }
 </script>
