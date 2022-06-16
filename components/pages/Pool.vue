@@ -1,5 +1,7 @@
 <template>
   <div>
+    <ui-breadcrumbs :items="breadcrumbs" />
+
     <ui-container>
       <ui-title>
         <div>Transactions</div>
@@ -23,6 +25,23 @@ export default {
   computed: {
     id() {
       return this.$route.params.id;
+    },
+    breadcrumbs() {
+      return [
+        {
+          name: 'Overview',
+          to: { name: 'index' }
+        },
+        {
+          name: 'Pools',
+          to: { name: 'pools' }
+        },
+        {
+          name: 'Pool',
+          to: { name: 'pools-id', params: { id: this.id } },
+          disabled: true,
+        },
+      ];
     },
   },
   mounted() {

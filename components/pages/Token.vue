@@ -1,5 +1,7 @@
 <template>
   <div>
+    <ui-breadcrumbs :items="breadcrumbs" />
+
     <ui-container>
       <ui-title>
         <div>Top Pools</div>
@@ -35,6 +37,23 @@ export default {
   computed: {
     id() {
       return this.$route.params.id;
+    },
+    breadcrumbs() {
+      return [
+        {
+          name: 'Overview',
+          to: { name: 'index' }
+        },
+        {
+          name: 'Tokens',
+          to: { name: 'tokens' }
+        },
+        {
+          name: 'Token',
+          to: { name: 'tokens-id', params: { id: this.id } },
+          disabled: true,
+        },
+      ];
     },
   },
   async mounted() {
