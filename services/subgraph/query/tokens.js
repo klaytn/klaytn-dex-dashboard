@@ -9,9 +9,31 @@ query OverviewTokensQuery($timestamp: Int) {
     tradeVolume
     totalLiquidity
     derivedUSD
-    dayData(orderBy: timestamp, orderDirection: desc, where: {timestamp_gte: $timestamp}) {
-      dailyVolumeToken
+    dayData(first: 2, orderBy: timestamp, orderDirection: desc) {
       priceUSD
+      timestamp
+      totalLiquidityToken
+      dailyVolumeToken
+      totalTransactions
+    }
+  }
+}
+`;
+
+export const TokenQuery = gql`
+query TokenQuery($id: ID!, $timestamp: Int) {
+  token(id: $id) {
+    id
+    name
+    symbol
+    derivedUSD
+    totalLiquidity
+    dayData(first: 365, orderBy: timestamp, orderDirection: desc) {
+      priceUSD
+      timestamp
+      totalLiquidityToken
+      dailyVolumeToken
+      totalTransactions
     }
   }
 }

@@ -79,6 +79,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 8px 0px;
+  margin: auto;
   min-height: 48px;
   font-size: 16px;
   line-height: 19px;

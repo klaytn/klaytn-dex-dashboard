@@ -215,11 +215,8 @@ export default {
   },
   methods: {
     async updateTokens() {
-      // two days before
-      const timestamp = dayjs().startOf('hour').unix() - 2 * 24 * 60 * 60;
-
       this.tokensLoading = true;
-      this.tokens = await TokensExplorer.getTokens({ timestamp });
+      this.tokens = await TokensExplorer.getTokens();
       this.tokensLoading = false;
     },
 

@@ -43,17 +43,17 @@
       </el-table-column>
 
       <el-table-column
-        prop="tradeVolume"
+        prop="tradeVolumeDay"
         label="Volume 24H"
       >
         <template v-slot="{ row }">
-          <span>${{ formatAmount(row.tradeVolume) }}</span>
+          <span>${{ formatAmount(row.tradeVolumeDay) }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
         prop="totalLiquidity"
-        label="Total Deposited"
+        label="TVL"
       >
         <template v-slot="{ row }">
           <span>${{ formatAmount(row.totalLiquidity) }}</span>

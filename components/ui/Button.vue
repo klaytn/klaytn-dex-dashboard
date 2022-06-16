@@ -1,6 +1,7 @@
 <template>
   <button v-bind="$attrs" :class="['btn', { loading }]" v-on="$listeners">
-    <slot></slot>
+    <icon v-if="icon" :name="icon" class="btn-icon"/>
+    <span><slot></slot></span>
   </button>
 </template>
 
@@ -11,24 +12,36 @@ export default {
     loading: {
       type: Boolean,
     },
+    icon: {
+      type: String
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
 .btn {
+  display: flex;
+  align-items: center;
+
   background: $blue;
   border: none;
   cursor: pointer;
-  padding: 13px 13px;
+  padding: 10px 20px;
+  font-family: inherit;
   font-style: normal;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 14px;
+  line-height: 20px;
   color: $white;
-  border-radius: 16px;
-  line-height: 150%;
-  max-width: 388px;
-  width: 100%;
+  border-radius: 8px;
+  min-width: 100px;
+  max-height: 40px;
+  white-space: nowrap;
+
+  &-icon + * {
+    margin-left: 8px;
+  }
 
   &.loading {
     background: #8fbafb;

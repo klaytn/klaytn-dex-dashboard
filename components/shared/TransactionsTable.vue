@@ -65,7 +65,7 @@
 import dayjs from 'dayjs';
 
 import { TransactionTypes } from '@/consts';
-import { formatAmount } from '@/utils/formatters';
+import { formatAmount, formatAddress } from '@/utils/formatters';
 
 export default {
   name: "TransactionsTable",
@@ -85,6 +85,7 @@ export default {
       activeType: TransactionTypes.all,
       // formatters
       formatAmount,
+      formatAddress
     }
   },
   computed: {
@@ -109,9 +110,6 @@ export default {
   methods: {
     formatTime(timestamp) {
       return dayjs().to(dayjs(timestamp));
-    },
-    formatAddress(address, length = address.length / 2) {
-      return `${address.slice(0, length / 2)}...${address.slice(-length / 2)}`;
     },
     formatType(type) {
       return type === TransactionTypes.swap ? 'for' : 'and';

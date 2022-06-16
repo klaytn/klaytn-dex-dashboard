@@ -9,3 +9,7 @@ export const formatAmount = (amount) => {
 
   return String(val.toFixed(2));
 };
+
+export const formatAddress = (address, length = address.length / 2) => {
+  return `${address.slice(0, length / 2)}...${address.slice(-length / 2)}`;
+};
