@@ -87,7 +87,7 @@ import { PairsExplorer, TokensExplorer, TransactionsExplorer } from '@/services/
 import { formatAmount, formatAddress } from '@/utils/formatters';
 
 import { TokenChartTags } from '@/consts';
-import { tvlChartSpec } from '@/utils/chartSpecs';
+import { tvlChartSpec, volumeChartSpec } from '@/utils/chartSpecs';
 
 export default {
   name: "TokenPage",
@@ -179,13 +179,22 @@ export default {
     chartData() {
       if (!this.token.dayData) return [];
 
+      const prop = this.activeTag === TokenChartTags.tvl
+        ? 'totalLiquidity'
+        : (this.activeTag === TokenChartTags.volume ? 'tradeVolume' : 'price');
+
       return this.token.dayData.map(item => ({
         timestamp: item.timestamp,
-        value: item.totalLiquidity
+        value: item[prop]
       })).sort((a, b) => a.timestamp - b.timestamp);
     },
     chartSpec() {
-      return tvlChartSpec(this.chartData);
+      const formatter = (value) => dayjs(+value).format('DD MMM');
+
+      if (this.activeTag === TokenChartTags.tvl) return tvlChartSpec(this.chartData);
+      if (this.activeTag === TokenChartTags.volume) return volumeChartSpec(this.chartData, formatter);
+
+      return null;
     },
   },
   async mounted() {

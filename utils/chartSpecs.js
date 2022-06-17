@@ -61,9 +61,9 @@ export const tvlChartSpec = (chartData) => ({
   ],
 });
 
-export const factoryVolumeChartSpec = (chartData, formatter = (value) => value) => ({
+export const volumeChartSpec = (chartData, formatter = (value) => value) => ({
   xAxis: {
-    data: chartData.map(item => item.start),
+    data: chartData.map(item => item.timestamp),
     axisLabel: {
       formatter
     },

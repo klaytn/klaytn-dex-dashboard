@@ -63,7 +63,7 @@ import { TokensExplorer, PairsExplorer, TransactionsExplorer } from '@/services/
 import { OverviewFactoryDailyVolume, OverviewFactoryTotalLiquidity, PairDayDatas } from '@/services/subgraph/query/factory';
 import { DateTags } from '@/consts';
 
-import { tvlChartSpec, factoryVolumeChartSpec } from '@/utils/chartSpecs';
+import { tvlChartSpec, volumeChartSpec } from '@/utils/chartSpecs';
 import { formatAmount } from '@/utils/formatters';
 
 const formatfactoryVolumeData = (data) => {
@@ -104,8 +104,8 @@ const groupFactoryDailyData = (data, dateTag) => {
       const end = isDaily ? start : (isMontly ? start.endOf('month') : start.endOf('week'));
 
       buffer.push({
-        start: start.valueOf(),
-        end: end.valueOf(),
+        timestamp: start.valueOf(),
+        timestamp2: end.valueOf(),
         value,
       });
     });
@@ -188,20 +188,20 @@ export default {
       return tvlChartSpec(this.factoryTotalLiquidityData);
     },
 
+    volumeGroups() {
+      return groupFactoryDailyData(this.factoryVolumeData, this.activeVolumeTag);
+    },
     volumeSpec() {
       const formatter = this.activeVolumeTag === DateTags.monthly
         ? (value) => dayjs(+value).format('MMM')
         : (value) => dayjs(+value).format('DD MMM');
 
-      return factoryVolumeChartSpec(this.volumeGroups, formatter);
-    },
-    volumeGroups() {
-      return groupFactoryDailyData(this.factoryVolumeData, this.activeVolumeTag);
+      return volumeChartSpec(this.volumeGroups, formatter);
     },
     volumeTimeFormatter() {
       return this.activeVolumeTag === DateTags.daily
-        ? (value) => dayjs(value.start).format('MMM DD, YYYY')
-        : (value) => `${dayjs(value.start).format('MMM DD')}-${dayjs(value.end).format('MMM DD, YYYY')}`;
+        ? (value) => dayjs(value.timestamp).format('MMM DD, YYYY')
+        : (value) => `${dayjs(value.timestamp).format('MMM DD')}-${dayjs(value.timestamp2).format('MMM DD, YYYY')}`;
     }
   },
 
