@@ -15,7 +15,10 @@
           <div>
             <shared-stats-block>
               <div slot="title">{{ name }} Price</div>
-              <div slot="content">${{ price }}</div>
+              <template slot="content">
+                <span>${{ price }}</span>
+                <shared-value-difference :value="priceChange" />
+              </template>
             </shared-stats-block>
             <shared-stats-block>
               <div slot="title">Liquidity</div>
@@ -95,6 +98,9 @@ export default {
     },
     price() {
       return formatAmount(this.token.price ?? 0);
+    },
+    priceChange() {
+      return this.token.priceChange ?? 0;
     },
     liquidity() {
       return formatAmount(this.token.totalLiquidity ?? 0);

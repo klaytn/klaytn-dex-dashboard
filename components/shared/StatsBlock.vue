@@ -31,10 +31,18 @@ export default {
   }
 
   &-content {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: baseline;
+
     font-size: 20px;
     font-weight: 700;
     line-height: 24px;
     color: $dark2;
+
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
   }
 
   &-title + &-content {
