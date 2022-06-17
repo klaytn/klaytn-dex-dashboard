@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { graphic } from 'echarts';
 
-export const tvlChartSpec = (chartData) => ({
+export const lineChartSpec = (chartData) => ({
   xAxis: {
     type: 'category',
     boundaryGap: false,
@@ -61,7 +61,7 @@ export const tvlChartSpec = (chartData) => ({
   ],
 });
 
-export const volumeChartSpec = (chartData, formatter = (value) => value) => ({
+export const barChartSpec = (chartData, formatter = (value) => value) => ({
   xAxis: {
     data: chartData.map(item => item.timestamp),
     axisLabel: {

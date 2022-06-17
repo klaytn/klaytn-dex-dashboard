@@ -52,6 +52,7 @@ export default {
   }
 
   &-content {
+    width: 100%;
     padding: 8px 0px;
   }
 
@@ -75,6 +76,7 @@ export default {
   }
 
   &-column {
+    display: flex;
     padding: 0 24px;
 
     &.fullwidth {

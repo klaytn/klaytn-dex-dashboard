@@ -58,7 +58,10 @@ export default {
 
   watch: {
     data: {
-      handler: 'resetHighlight'
+      handler: function() {
+        this.resetHighlight();
+        this.onResize();
+      }
     },
   },
 
@@ -99,6 +102,7 @@ export default {
 .ui-chart {
   height: 400px;
   width: 100%;
+  max-width: 100%;
 
   &-card {
     padding: 16px 0;

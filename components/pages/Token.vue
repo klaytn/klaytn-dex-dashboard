@@ -87,14 +87,14 @@ import { PairsExplorer, TokensExplorer, TransactionsExplorer } from '@/services/
 import { formatAmount, formatAddress } from '@/utils/formatters';
 
 import { TokenChartTags } from '@/consts';
-import { tvlChartSpec, volumeChartSpec } from '@/utils/chartSpecs';
+import { lineChartSpec, barChartSpec } from '@/utils/chartSpecs';
 
 export default {
   name: "TokenPage",
   data() {
     return {
       // chart tags
-      tag: TokenChartTags.tvl,
+      tag: TokenChartTags.price,
       tags: Object.values(TokenChartTags),
       // data
       token: {},
@@ -191,10 +191,9 @@ export default {
     chartSpec() {
       const formatter = (value) => dayjs(+value).format('DD MMM');
 
-      if (this.activeTag === TokenChartTags.tvl) return tvlChartSpec(this.chartData);
-      if (this.activeTag === TokenChartTags.volume) return volumeChartSpec(this.chartData, formatter);
+      if (this.activeTag === TokenChartTags.volume) return barChartSpec(this.chartData, formatter);
 
-      return null;
+      return lineChartSpec(this.chartData);
     },
   },
   async mounted() {

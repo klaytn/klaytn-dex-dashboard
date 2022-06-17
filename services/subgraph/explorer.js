@@ -62,9 +62,9 @@ class Tokens extends SubgraphExplorer {
 
   formatTokenData(data) {
     // 7 days before
-    const weekTimestamp = (dayjs().startOf('hour').unix() - 7 * 24 * 60 * 60) * 1000;
+    const weekTimestamp = (dayjs().startOf('day').unix() - 7 * 24 * 60 * 60) * 1000;
     // 1 days before
-    const dayTimestamp = (dayjs().startOf('hour').unix() - 24 * 60 * 60) * 1000;
+    const dayTimestamp = (dayjs().startOf('day').unix() - 24 * 60 * 60) * 1000;
 
     const dayData = data.dayData.map(dayData => this.formatTokenDayData(dayData));
     const price = Number(data.derivedUSD);
@@ -89,6 +89,7 @@ class Tokens extends SubgraphExplorer {
       transactionsWeek += transactions;
 
       if (item.timestamp >= dayTimestamp) {
+        console.log(transactions)
         const lastPrice = item.price;
         const lastTotalLiquidity = item.totalLiquidity;
 
