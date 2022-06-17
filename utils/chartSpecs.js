@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { graphic } from 'echarts';
 
-export const factoryTvlChartSpec = (chartData) => ({
+export const tvlChartSpec = (chartData) => ({
   xAxis: {
     type: 'category',
     boundaryGap: false,

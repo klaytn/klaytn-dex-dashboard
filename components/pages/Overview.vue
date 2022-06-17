@@ -63,7 +63,7 @@ import { TokensExplorer, PairsExplorer, TransactionsExplorer } from '@/services/
 import { OverviewFactoryDailyVolume, OverviewFactoryTotalLiquidity, PairDayDatas } from '@/services/subgraph/query/factory';
 import { DateTags } from '@/consts';
 
-import { factoryTvlChartSpec, factoryVolumeChartSpec } from '@/utils/chartSpecs';
+import { tvlChartSpec, factoryVolumeChartSpec } from '@/utils/chartSpecs';
 import { formatAmount } from '@/utils/formatters';
 
 const formatfactoryVolumeData = (data) => {
@@ -185,7 +185,7 @@ export default {
     },
 
     tvlSpec() {
-      return factoryTvlChartSpec(this.factoryTotalLiquidityData);
+      return tvlChartSpec(this.factoryTotalLiquidityData);
     },
 
     volumeSpec() {

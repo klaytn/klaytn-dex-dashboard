@@ -22,7 +22,10 @@
             </shared-stats-block>
             <shared-stats-block>
               <div slot="title">Liquidity</div>
-              <div slot="content">${{ liquidity }}</div>
+              <template slot="content">
+                <span>${{ liquidity }}</span>
+                <shared-value-difference :value="liquidityChange" />
+              </template>
             </shared-stats-block>
           </div>
           <div>
@@ -44,7 +47,19 @@
             </shared-stats-block>
           </div>
         </template>
-        <template #default>3</template>
+        <template #default>
+          <ui-chart
+            :data="chartData"
+            :spec="chartSpec"
+            :value-formatter="valueFormatter"
+            :time-formatter="timeFormatter"
+            transparent
+          >
+            <template #controls>
+              <ui-tags v-model="activeTag" :tags="tags" />
+            </template>
+          </ui-chart>
+        </template>
       </shared-stats-card>
     </ui-container>
 
@@ -71,10 +86,17 @@ import { PairsExplorer, TokensExplorer, TransactionsExplorer } from '@/services/
 
 import { formatAmount, formatAddress } from '@/utils/formatters';
 
+import { TokenChartTags } from '@/consts';
+import { tvlChartSpec } from '@/utils/chartSpecs';
+
 export default {
   name: "TokenPage",
   data() {
     return {
+      // chart tags
+      tag: TokenChartTags.tvl,
+      tags: Object.values(TokenChartTags),
+      // data
       token: {},
       ids: [],
       pairs: [],
@@ -87,6 +109,15 @@ export default {
     }
   },
   computed: {
+    activeTag: {
+      get() {
+        return this.tag;
+      },
+      set(value) {
+        this.tag = value;
+      },
+    },
+
     id() {
       return this.$route.params.id;
     },
@@ -104,6 +135,9 @@ export default {
     },
     liquidity() {
       return formatAmount(this.token.totalLiquidity ?? 0);
+    },
+    liquidityChange() {
+      return this.token.totalLiquidityChange ?? 0;
     },
     tradeVolumeDay() {
       return formatAmount(this.token.tradeVolumeDay ?? 0);
@@ -133,6 +167,25 @@ export default {
           disabled: true,
         },
       ];
+    },
+
+    valueFormatter() {
+      return (v) => `$${formatAmount(v.value)}`;
+    },
+    timeFormatter() {
+      return (v) => dayjs(v.timestamp).format('MMM DD, YYYY');
+    },
+
+    chartData() {
+      if (!this.token.dayData) return [];
+
+      return this.token.dayData.map(item => ({
+        timestamp: item.timestamp,
+        value: item.totalLiquidity
+      })).sort((a, b) => a.timestamp - b.timestamp);
+    },
+    chartSpec() {
+      return tvlChartSpec(this.chartData);
     },
   },
   async mounted() {

@@ -1,5 +1,5 @@
 <template>
-  <ui-card class="ui-chart-card">
+  <ui-card :class="['ui-chart-card', { transparent }]">
     <div class="ui-chart-data">
       <div class="ui-chart-title" v-if="selectedData">
         <div class="ui-chart-title__secondary">{{ title }}</div>
@@ -44,6 +44,9 @@ export default {
     timeFormatter: {
       type: Function,
       default: (v) => v,
+    },
+    transparent: {
+      type: Boolean,
     },
   },
   data() {
@@ -100,6 +103,11 @@ export default {
   &-card {
     padding: 16px 0;
     position: relative;
+
+    &.transparent {
+      background: transparent;
+      box-shadow: none;
+    }
   }
 
   &-data {

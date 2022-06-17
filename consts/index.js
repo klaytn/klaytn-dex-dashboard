@@ -10,3 +10,9 @@ export const DateTags = {
   weekly: 'W',
   monthly: 'M',
 };
+
+export const TokenChartTags = {
+  price: 'Price',
+  volume: 'Volume',
+  tvl: 'TVL',
+};

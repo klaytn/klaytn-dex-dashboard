@@ -52,7 +52,7 @@ export default {
   }
 
   &-content {
-    padding: 24px 0px;
+    padding: 8px 0px;
   }
 
   &-title {

@@ -8,6 +8,12 @@ import { OverviewTransactionsQuery, TransactionsByPairsQuery } from '@/services/
 
 import { TransactionTypes } from '@/consts';
 
+const calcChange = (current, last) => {
+  const divider = last || current;
+
+  return divider !== 0 ? (current - last) * 100 / divider : 0;
+};
+
 class SubgraphExplorer {
   constructor() {
     this.client = SubgraphClient;
@@ -65,6 +71,7 @@ class Tokens extends SubgraphExplorer {
     const totalLiquidity = Number(data.totalLiquidity) * price;
 
     let priceChange = 0;
+    let totalLiquidityChange = 0;
     let transactionsDay = 0;
     let transactionsWeek = 0;
     let tradeVolumeDay = 0;
@@ -75,19 +82,20 @@ class Tokens extends SubgraphExplorer {
 
       if (item.timestamp < weekTimestamp) break;
 
-      const tradeVolumeUSD = item.dailyVolumeToken * item.price;
+      const tradeVolume = item.tradeVolume;
       const transactions = item.totalTransactions;
 
-      tradeVolumeWeek += tradeVolumeUSD;
+      tradeVolumeWeek += tradeVolume;
       transactionsWeek += transactions;
 
       if (item.timestamp >= dayTimestamp) {
-        console.log(new Date(item.timestamp), new Date(dayTimestamp), data.name)
         const lastPrice = item.price;
+        const lastTotalLiquidity = item.totalLiquidity;
 
-        tradeVolumeDay += tradeVolumeUSD;
+        tradeVolumeDay += tradeVolume;
         transactionsDay += transactions;
-        priceChange = lastPrice !== 0 ? (price - lastPrice) * 100 / lastPrice : 0;
+        priceChange = calcChange(price, lastPrice);
+        totalLiquidityChange = calcChange(totalLiquidity, lastTotalLiquidity);
       }
     }
 
@@ -97,11 +105,12 @@ class Tokens extends SubgraphExplorer {
       symbol: data.symbol,
       price,
       priceChange,
+      totalLiquidity,
+      totalLiquidityChange,
       tradeVolumeDay,
       tradeVolumeWeek,
       transactionsDay,
       transactionsWeek,
-      totalLiquidity,
       dayData,
     };
   }
@@ -112,12 +121,14 @@ class Tokens extends SubgraphExplorer {
     const dailyVolumeToken = Number(dayData.dailyVolumeToken ?? 0);
     const totalLiquidityToken = Number(dayData.totalLiquidityToken ?? 0);
     const totalTransactions = Number(dayData.totalTransactions ?? 0);
+    const tradeVolume = dailyVolumeToken * price;
+    const totalLiquidity = totalLiquidityToken * price;
 
     return {
       price,
       timestamp,
-      dailyVolumeToken,
-      totalLiquidityToken,
+      tradeVolume,
+      totalLiquidity,
       totalTransactions,
     };
   }
