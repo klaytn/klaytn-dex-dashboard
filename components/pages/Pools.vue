@@ -27,11 +27,9 @@ export default {
     async updatePairs() {
       const first = 1000;
       // 7 days before
-      const dayTimestamp = dayjs().startOf('hour').unix() - 7 * 24 * 60 * 60;
-      // 1 days before
-      const hourTimestamp = dayjs().startOf('hour').unix() - 24 * 60 * 60;
+      const timestamp = dayjs().startOf('hour').unix() - 7 * 24 * 60 * 60;
       // common vars
-      const vars = { first, dayTimestamp, hourTimestamp };
+      const vars = { first, timestamp };
 
       this.pairsLoading = true;
       this.pairs = await PairsExplorer.getPairs(vars);

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import SubgraphClient from './client';
 
 import { OverviewTokensQuery, TokenPairsQuery, TokenQuery } from './query/tokens';
-import { OverviewPoolsQuery } from './query/pools';
+import { OverviewPoolsQuery, PairQuery } from './query/pools';
 import { OverviewTransactionsQuery, TransactionsByPairsQuery } from '@/services/subgraph/query/transactions';
 
 import { TransactionTypes } from '@/consts';
@@ -136,6 +136,17 @@ class Tokens extends SubgraphExplorer {
 };
 
 class Pairs extends SubgraphExplorer {
+  async getPair(vars) {
+    try {
+      const { pair } = await this.request(PairQuery, vars);
+
+      return this.formatPair(pair);
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
   async getPairs(vars) {
     try {
       const { pairs } = await this.request(OverviewPoolsQuery, vars);
@@ -148,35 +159,76 @@ class Pairs extends SubgraphExplorer {
   }
 
   formatPair(data) {
-    const token0price = Number(data.token0.derivedUSD);
-    const token1price = Number(data.token1.derivedUSD);
+    // 7 days before
+    const weekTimestamp = (dayjs().startOf('day').unix() - 7 * 24 * 60 * 60) * 1000;
+    // 2 days before
+    const prevDayTimestamp = (dayjs().startOf('day').unix() - 2 * 24 * 60 * 60) * 1000;
+    // 1 days before
+    const dayTimestamp = (dayjs().startOf('day').unix() - 24 * 60 * 60) * 1000;
 
-    const daily = this.aggregate(data, 'hourData');
-    const weekly= this.aggregate(data, 'dayData');
+    const dayData = data.dayData.map(dayData => this.formatPairDayData(dayData));
+    const totalLiquidity = Number(data.reserveUSD ?? 0);
+    const reserve0 = Number(data.reserve0 ?? 0);
+    const reserve1 = Number(data.reserve1 ?? 0);
 
-    const dayVolume = daily.volumeToken0 * token0price + daily.volumeToken1 * token1price;
-    const weekVolume = weekly.volumeToken0 * token0price + weekly.volumeToken1 * token1price;
+    let tradeVolumeChange = 0;
+    let totalLiquidityChange = 0;
+    let transactionsDay = 0;
+    let transactionsWeek = 0;
+    let tradeVolumeDay = 0;
+    let tradeVolumeWeek = 0;
 
-    const tvl = Number(data.reserveUSD);
+    for (let i = 0; i < dayData.length; i++) {
+      const item = dayData[i];
+
+      if (item.timestamp < weekTimestamp) break;
+
+      const tradeVolume = item.tradeVolume;
+      const transactions = item.totalTransactions;
+
+      tradeVolumeWeek += tradeVolume;
+      transactionsWeek += transactions;
+
+      if (item.timestamp >= dayTimestamp) {
+        const lastTotalLiquidity = item.totalLiquidity;
+
+        tradeVolumeDay += tradeVolume;
+        transactionsDay += transactions;
+        totalLiquidityChange = calcChange(totalLiquidity, lastTotalLiquidity);
+      } else if (item.timestamp >= prevDayTimestamp) {
+        tradeVolumeChange = calcChange(tradeVolumeDay, tradeVolume);
+      }
+    }
 
     return {
       id: data.id,
       name: data.name,
-      tvl,
-      dayVolume,
-      weekVolume,
+      token0: data.token0,
+      token1: data.token1,
+      reserve0,
+      reserve1,
+      totalLiquidity,
+      totalLiquidityChange,
+      tradeVolumeDay,
+      tradeVolumeWeek,
+      tradeVolumeChange,
+      transactionsDay,
+      transactionsWeek,
     };
   }
 
-  aggregate(data, aggrProperty = 'hourData', volumeA = 'volumeToken0', volumeB = 'volumeToken1') {
-    return data[aggrProperty].reduce((buffer, item) => {
-      buffer[volumeA] = buffer[volumeA] + Number(item[volumeA]);
-      buffer[volumeB] = buffer[volumeB] + Number(item[volumeB]);
-      return buffer;
-    }, {
-      [volumeA]: 0,
-      [volumeB]: 0,
-    });
+  formatPairDayData(dayData) {
+    const timestamp = Number(dayData.timestamp) * 1000;
+    const tradeVolume = Number(dayData.volumeUSD ?? 0);
+    const totalLiquidity = Number(dayData.reserveUSD ?? 0);
+    const totalTransactions = Number(dayData.totalTransactions ?? 0);
+
+    return {
+      timestamp,
+      tradeVolume,
+      totalLiquidity,
+      totalTransactions,
+    };
   }
 };
 

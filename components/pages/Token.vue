@@ -188,6 +188,7 @@ export default {
         value: item[prop]
       })).sort((a, b) => a.timestamp - b.timestamp);
     },
+
     chartSpec() {
       const formatter = (value) => dayjs(+value).format('DD MMM');
 
@@ -219,13 +220,11 @@ export default {
     async updatePairs() {
       const first = 1000;
       // 7 days before
-      const dayTimestamp = dayjs().startOf('hour').unix() - 7 * 24 * 60 * 60;
-      // 1 days before
-      const hourTimestamp = dayjs().startOf('hour').unix() - 24 * 60 * 60;
+      const timestamp = dayjs().startOf('hour').unix() - 7 * 24 * 60 * 60;
       // where clause
       const where = { id_in: this.ids };
       // common vars
-      const vars = { first, dayTimestamp, hourTimestamp, where };
+      const vars = { first, timestamp, where };
 
       this.pairsLoading = true;
       this.pairs = await PairsExplorer.getPairs(vars);

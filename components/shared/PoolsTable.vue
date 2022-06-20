@@ -25,29 +25,29 @@
       </el-table-column>
 
       <el-table-column
-        prop="tvl"
+        prop="totalLiquidity"
         label="TVL"
       >
         <template v-slot="{ row }">
-          <span>${{ formatAmount(row.tvl) }}</span>
+          <span>${{ formatAmount(row.totalLiquidity) }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
-        prop="dayVolume"
+        prop="tradeVolumeDay"
         label="Volume 24H"
       >
         <template v-slot="{ row }">
-          <span>${{ formatAmount(row.dayVolume) }}</span>
+          <span>${{ formatAmount(row.tradeVolumeDay) }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
-        prop="weekVolume"
+        prop="tradeVolumeWeek"
         label="Volume 7D"
       >
         <template v-slot="{ row }">
-          <span>${{ formatAmount(row.weekVolume) }}</span>
+          <span>${{ formatAmount(row.tradeVolumeWeek) }}</span>
         </template>
       </el-table-column>
     </template>
