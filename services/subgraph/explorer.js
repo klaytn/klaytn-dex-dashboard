@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import SubgraphClient from './client';
 
 import { OverviewTokensQuery, TokenPairsQuery, TokenQuery } from './query/tokens';
-import { OverviewPoolsQuery, PairQuery } from './query/pools';
+import { OverviewPairsQuery, PairQuery } from './query/pools';
 import { OverviewTransactionsQuery, TransactionsByPairsQuery } from '@/services/subgraph/query/transactions';
 
 import { TransactionTypes } from '@/consts';
@@ -89,7 +89,6 @@ class Tokens extends SubgraphExplorer {
       transactionsWeek += transactions;
 
       if (item.timestamp >= dayTimestamp) {
-        console.log(transactions)
         const lastPrice = item.price;
         const lastTotalLiquidity = item.totalLiquidity;
 
@@ -149,7 +148,7 @@ class Pairs extends SubgraphExplorer {
 
   async getPairs(vars) {
     try {
-      const { pairs } = await this.request(OverviewPoolsQuery, vars);
+      const { pairs } = await this.request(OverviewPairsQuery, vars);
 
       return pairs.map(pair => this.formatPair(pair));
     } catch (error) {
@@ -181,7 +180,7 @@ class Pairs extends SubgraphExplorer {
     for (let i = 0; i < dayData.length; i++) {
       const item = dayData[i];
 
-      if (item.timestamp < weekTimestamp) break;
+      if (item.timestamp < weekTimestamp) continue;
 
       const tradeVolume = item.tradeVolume;
       const transactions = item.totalTransactions;
@@ -214,6 +213,7 @@ class Pairs extends SubgraphExplorer {
       tradeVolumeChange,
       transactionsDay,
       transactionsWeek,
+      dayData
     };
   }
 

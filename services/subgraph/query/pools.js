@@ -22,8 +22,8 @@ const PairDayDataFragment = gql`
   }
 `;
 
-export const OverviewPoolsQuery = gql`
-query OverviewPoolsQuery($first: Int = 50, $timestamp: Int, $where: Pair_filter) {
+export const OverviewPairsQuery = gql`
+query OverviewPairsQuery($first: Int = 50, $timestamp: Int, $where: Pair_filter) {
   pairs(orderBy: reserveUSD, orderDirection: desc, where: $where) {
     ...PairFragment
     dayData(orderBy: timestamp, orderDirection: desc, where: {timestamp_gte: $timestamp}) {
@@ -45,7 +45,7 @@ query PairQuery($id: ID!) {
     token1 {
       symbol
     }
-    dayData(first: 365, orderBy: timestamp, orderDirection: desc) {
+    dayData(first: 365, orderBy: timestamp, orderDirection: asc) {
       ...PairDayDataFragment
     }
   }

@@ -55,7 +55,7 @@
             </shared-stats-block>
           </div>
         </template>
-        <!-- <template #default>
+        <template #default>
           <ui-chart
             :data="chartData"
             :spec="chartSpec"
@@ -67,7 +67,7 @@
               <ui-tags v-model="activeTag" :tags="tags" />
             </template>
           </ui-chart>
-        </template> -->
+        </template>
       </shared-stats-card>
     </ui-container>
 
@@ -81,19 +81,22 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
+
 import { TransactionsExplorer, PairsExplorer } from '@/services/subgraph/explorer';
 
-import { PoolChartTags } from '@/consts';
+import { PairChartTags } from '@/consts';
 
 import { formatAmount } from '@/utils/formatters';
+import { lineChartSpec, barChartSpec } from '@/utils/chartSpecs';
 
 export default {
   name: "PoolPage",
   data() {
     return {
       // chart tags
-      tag: PoolChartTags.volume,
-      tags: Object.values(PoolChartTags),
+      tag: PairChartTags.volume,
+      tags: Object.values(PairChartTags),
       // data
       pair: {},
       transactions: [],
@@ -101,6 +104,15 @@ export default {
     }
   },
   computed: {
+    activeTag: {
+      get() {
+        return this.tag;
+      },
+      set(value) {
+        this.tag = value;
+      },
+    },
+
     id() {
       return this.$route.params.id;
     },
@@ -156,6 +168,33 @@ export default {
           disabled: true,
         },
       ];
+    },
+
+    valueFormatter() {
+      return (v) => `$${formatAmount(v.value)}`;
+    },
+    timeFormatter() {
+      return (v) => dayjs(v.timestamp).format('MMM DD, YYYY');
+    },
+
+    chartData() {
+      if (!this.pair.dayData) return [];
+
+      const prop = this.activeTag === PairChartTags.tvl
+        ? 'totalLiquidity'
+        : 'tradeVolume';
+
+      return this.pair.dayData.map(item => ({
+        timestamp: item.timestamp,
+        value: item[prop]
+      })).sort((a, b) => a.timestamp - b.timestamp);
+    },
+    chartSpec() {
+      const formatter = (value) => dayjs(+value).format('DD MMM');
+
+      if (this.activeTag === PairChartTags.volume) return barChartSpec(this.chartData, formatter);
+
+      return lineChartSpec(this.chartData);
     },
   },
   mounted() {

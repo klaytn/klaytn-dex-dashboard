@@ -17,8 +17,7 @@ export const TokenChartTags = {
   tvl: 'TVL',
 };
 
-export const PoolChartTags = {
+export const PairChartTags = {
   volume: 'Volume',
   tvl: 'TVL',
-  liquidity: 'Liquidity',
 };
