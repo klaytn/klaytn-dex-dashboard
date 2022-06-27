@@ -6,10 +6,17 @@
       <shared-stats-card>
         <template #title>
           <div>{{ name }} ({{ symbol }})</div>
+          <a :href="tokenLink" target="_blank" rel="noopener noreferrer">
+            <icon name="link" />
+          </a>
         </template>
         <template #buttons>
-          <ui-button icon="plus">Add Liquidity</ui-button>
-          <ui-button icon="refresh">Trade</ui-button>
+          <a :href="addLiquidityLink" target="_blank" rel="noopener noreferrer">
+            <ui-button icon="plus">Add Liquidity</ui-button>
+          </a>
+          <a :href="swapLink" target="_blank" rel="noopener noreferrer">
+            <ui-button icon="refresh">Trade</ui-button>
+          </a>
         </template>
         <template #aside>
           <div>
@@ -89,6 +96,8 @@ import { formatAmount, formatAddress } from '@/utils/formatters';
 import { TokenChartTags } from '@/consts';
 import { lineChartSpec, barChartSpec } from '@/utils/chartSpecs';
 
+import { NetworkExplorer, ExchangeExplorer } from '@/utils/explorer';
+
 export default {
   name: "TokenPage",
   data() {
@@ -151,6 +160,17 @@ export default {
     transactionsWeek() {
       return this.token.transactionsWeek ?? 0;
     },
+
+    tokenLink() {
+      return NetworkExplorer.contractLink(this.id);
+    },
+    addLiquidityLink() {
+      return ExchangeExplorer.addLiquidityLink(this.id);
+    },
+    swapLink() {
+      return ExchangeExplorer.swapLink(this.id);
+    },
+
     breadcrumbs() {
       return [
         {

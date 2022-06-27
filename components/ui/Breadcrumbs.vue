@@ -16,6 +16,9 @@ export default {
       default: () => ([]),
     },
   },
+  mounted() {
+    console.log(this.$route)
+  }
 };
 </script>
 

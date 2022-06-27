@@ -57,10 +57,19 @@ export default {
   }
 
   &-title {
+    display: flex;
+    align-items: center;
+
     font-size: 20px;
     font-weight: 700;
     line-height: 24px;
     color: $dark2;
+
+    & > * {
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
+    }
   }
 
   &-body,

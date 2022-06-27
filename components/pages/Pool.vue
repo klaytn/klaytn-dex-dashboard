@@ -6,10 +6,17 @@
       <shared-stats-card>
         <template #title>
           <div>{{ name }}</div>
+          <a :href="pairLink" target="_blank" rel="noopener noreferrer">
+            <icon name="link" />
+          </a>
         </template>
         <template #buttons>
-          <ui-button icon="plus">Add Liquidity</ui-button>
-          <ui-button icon="refresh">Trade</ui-button>
+          <a :href="addLiquidityLink" target="_blank" rel="noopener noreferrer">
+            <ui-button icon="plus">Add Liquidity</ui-button>
+          </a>
+          <a :href="swapLink" target="_blank" rel="noopener noreferrer">
+            <ui-button icon="refresh">Trade</ui-button>
+          </a>
         </template>
         <template #aside>
           <div>
@@ -90,6 +97,8 @@ import { PairChartTags } from '@/consts';
 import { formatAmount } from '@/utils/formatters';
 import { lineChartSpec, barChartSpec } from '@/utils/chartSpecs';
 
+import { NetworkExplorer, ExchangeExplorer } from '@/utils/explorer';
+
 export default {
   name: "PoolPage",
   data() {
@@ -119,11 +128,17 @@ export default {
     name() {
       return this.pair.name ?? '';
     },
+    token0Id() {
+      return this.pair.token0?.id ?? '';
+    },
     token0Symbol() {
       return this.pair.token0?.symbol ?? '';
     },
     token0Reserve() {
       return formatAmount(this.pair.reserve0 ?? 0);
+    },
+    token1Id() {
+      return this.pair.token1?.id ?? '';
     },
     token1Symbol() {
       return this.pair.token1?.symbol ?? '';
@@ -152,6 +167,17 @@ export default {
     transactionsWeek() {
       return this.pair.transactionsWeek ?? 0;
     },
+
+    pairLink() {
+      return NetworkExplorer.contractLink(this.id);
+    },
+    addLiquidityLink() {
+      return ExchangeExplorer.addLiquidityLink(this.token0Id, this.token1Id);
+    },
+    swapLink() {
+      return ExchangeExplorer.swapLink(this.token0Id, this.token1Id);
+    },
+
     breadcrumbs() {
       return [
         {

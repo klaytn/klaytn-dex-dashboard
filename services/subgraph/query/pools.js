@@ -40,9 +40,11 @@ query PairQuery($id: ID!) {
   pair(id: $id) {
     ...PairFragment
     token0 {
+      id
       symbol
     }
     token1 {
+      id
       symbol
     }
     dayData(first: 365, orderBy: timestamp, orderDirection: asc) {
