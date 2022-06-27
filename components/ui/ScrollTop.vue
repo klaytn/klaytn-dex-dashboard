@@ -44,6 +44,9 @@ export default {
 
 <style lang="scss" scoped>
 .ui-scroll-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 30px;
   height: 30px;
   background: #FFFFFF;
