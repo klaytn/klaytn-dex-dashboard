@@ -3,8 +3,9 @@
     <ui-breadcrumbs :items="breadcrumbs" />
 
     <ui-container>
-      <shared-stats-card>
+      <shared-stats-card v-loading="tokenLoading">
         <template #title>
+          <logo-token :address="id" :symbol="symbol" />
           <div>{{ name }} ({{ symbol }})</div>
           <a :href="tokenLink" target="_blank" rel="noopener noreferrer">
             <icon name="link" />
@@ -107,6 +108,7 @@ export default {
       tags: Object.values(TokenChartTags),
       // data
       token: {},
+      tokenLoading: false,
       ids: [],
       pairs: [],
       pairsLoading: false,
@@ -230,7 +232,9 @@ export default {
   },
   methods: {
     async updateToken() {
+      this.tokenLoading = true;
       this.token = await TokensExplorer.getToken({ id: this.id })
+      this.tokenLoading = false;
     },
 
     async updatePairsIds() {

@@ -20,6 +20,7 @@
         label="Name"
       >
         <template v-slot="{ row }">
+          <logo-token :address="row.id" :symbol="row.symbol" />
           <nuxt-link :to="{ name: 'tokens-id', params: { id: row.id } }">{{ row.name }}</nuxt-link>
         </template>
       </el-table-column>

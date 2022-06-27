@@ -121,7 +121,13 @@ export default {
   }
 
   .cell {
+    display: flex;
+    align-items: center;
     min-height: 24px;
+
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
   }
 
   &.el-table {

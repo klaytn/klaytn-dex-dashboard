@@ -169,6 +169,8 @@ class Pairs extends SubgraphExplorer {
     const totalLiquidity = Number(data.reserveUSD ?? 0);
     const reserve0 = Number(data.reserve0 ?? 0);
     const reserve1 = Number(data.reserve1 ?? 0);
+    const token0Price = Number(data.token0Price ?? 0);
+    const token1Price = Number(data.token1Price ?? 0);
 
     let tradeVolumeChange = 0;
     let totalLiquidityChange = 0;
@@ -203,7 +205,9 @@ class Pairs extends SubgraphExplorer {
       id: data.id,
       name: data.name,
       token0: data.token0,
+      token0Price,
       token1: data.token1,
+      token1Price,
       reserve0,
       reserve1,
       totalLiquidity,

@@ -5,12 +5,24 @@
     <ui-container>
       <shared-stats-card>
         <template #title>
+          <logo-pair>
+            <logo-token :address="token0Id" :symbol="token0Symbol" :size="30" />
+            <logo-token :address="token1Id" :symbol="token1Symbol" :size="30" />
+          </logo-pair>
           <div>{{ name }}</div>
           <a :href="pairLink" target="_blank" rel="noopener noreferrer">
             <icon name="link" />
           </a>
         </template>
         <template #buttons>
+          <nuxt-link class="token-price" :to="{ name: 'tokens-id', params: { id: token0Id } }">
+            <logo-token :address="token0Id" :symbol="token0Symbol" class="token-logo" />
+            <span>1 {{ token0Symbol }} = {{ token1Price }} {{ token1Symbol }}</span>
+          </nuxt-link>
+          <nuxt-link class="token-price" :to="{ name: 'tokens-id', params: { id: token1Id } }">
+            <logo-token :address="token1Id" :symbol="token1Symbol" class="token-logo" />
+            <span>1 {{ token1Symbol }} = {{ token0Price }} {{ token0Symbol }}</span>
+          </nuxt-link>
           <a :href="addLiquidityLink" target="_blank" rel="noopener noreferrer">
             <ui-button icon="plus">Add Liquidity</ui-button>
           </a>
@@ -23,13 +35,19 @@
             <shared-stats-block>
               <div slot="title">{{ token0Symbol }} Locked</div>
               <template slot="content">
-                <span>{{ token0Reserve }}</span>
+                <logo-pair>
+                  <logo-token :address="token0Id" :symbol="token0Symbol" class="token-logo" />
+                  <span>{{ token0Reserve }}</span>
+                </logo-pair>
               </template>
             </shared-stats-block>
             <shared-stats-block>
               <div slot="title">{{ token1Symbol }} Locked</div>
               <template slot="content">
-                <span>{{ token1Reserve }}</span>
+                <logo-pair>
+                  <logo-token :address="token1Id" :symbol="token1Symbol" class="token-logo" />
+                  <span>{{ token1Reserve }}</span>
+                </logo-pair>
               </template>
             </shared-stats-block>
           </div>
@@ -137,6 +155,9 @@ export default {
     token0Reserve() {
       return formatAmount(this.pair.reserve0 ?? 0);
     },
+    token0Price() {
+      return (this.pair.token0Price ?? 0).toFixed(4);
+    },
     token1Id() {
       return this.pair.token1?.id ?? '';
     },
@@ -145,6 +166,9 @@ export default {
     },
     token1Reserve() {
       return formatAmount(this.pair.reserve1 ?? 0);
+    },
+    token1Price() {
+      return (this.pair.token1Price ?? 0).toFixed(4);
     },
     liquidity() {
       return formatAmount(this.pair.totalLiquidity ?? 0);
@@ -240,3 +264,21 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.token-price {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: 1px solid $gray5;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.5;
+  color: $dark2;
+}
+
+.token-logo {
+  margin-right: 4px;
+}
+</style>

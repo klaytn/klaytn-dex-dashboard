@@ -26,6 +26,14 @@ export const OverviewPairsQuery = gql`
 query OverviewPairsQuery($first: Int = 50, $timestamp: Int, $where: Pair_filter) {
   pairs(orderBy: reserveUSD, orderDirection: desc, where: $where) {
     ...PairFragment
+    token0 {
+      id
+      symbol
+    }
+    token1 {
+      id
+      symbol
+    }
     dayData(orderBy: timestamp, orderDirection: desc, where: {timestamp_gte: $timestamp}) {
       ...PairDayDataFragment
     }

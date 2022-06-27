@@ -20,6 +20,10 @@
         label="Name"
       >
         <template v-slot="{ row }">
+          <logo-pair>
+            <logo-token :address="row.token0.id" :symbol="row.token0.symbol" />
+            <logo-token :address="row.token1.id" :symbol="row.token1.symbol" />
+          </logo-pair>
           <nuxt-link :to="{ name: 'pools-id', params: { id: row.id } }">{{ row.name }}</nuxt-link>
         </template>
       </el-table-column>
@@ -77,3 +81,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.pair-logo {
+  display: flex;
+}
+</style>
