@@ -13,7 +13,7 @@ query OverviewTokensQuery($timestamp: Int) {
       priceUSD
       timestamp
       totalLiquidityToken
-      dailyVolumeToken
+      dailyVolumeUSD
       totalTransactions
     }
   }
@@ -32,7 +32,7 @@ query TokenQuery($id: ID!, $timestamp: Int) {
       priceUSD
       timestamp
       totalLiquidityToken
-      dailyVolumeToken
+      dailyVolumeUSD
       totalTransactions
     }
   }

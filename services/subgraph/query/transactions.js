@@ -25,6 +25,7 @@ query OverviewTransactionsQuery ($first: Int = 50) {
       amount0Out
       amount1In
       amount1Out
+      amountUSD
       from
       pair {
         ...PairTokensFragment
@@ -33,6 +34,7 @@ query OverviewTransactionsQuery ($first: Int = 50) {
     mints {
       amount0
       amount1
+      amountUSD
       to
       pair {
         ...PairTokensFragment
@@ -41,6 +43,7 @@ query OverviewTransactionsQuery ($first: Int = 50) {
     burns {
       amount0
       amount1
+      amountUSD
       to
       pair {
         ...PairTokensFragment
@@ -58,6 +61,7 @@ query TransactionsByPairsQuery ($first: Int = 1000, $pairs: [String!]) {
     amount0Out
     amount1In
     amount1Out
+    amountUSD
     from
     pair {
       ...PairTokensFragment
@@ -70,6 +74,7 @@ query TransactionsByPairsQuery ($first: Int = 1000, $pairs: [String!]) {
   mints(first: $first, orderBy: timestamp, orderDirection: desc, where: { pair_in: $pairs }) {
     amount0
     amount1
+    amountUSD
     to
     pair {
       ...PairTokensFragment
@@ -82,6 +87,7 @@ query TransactionsByPairsQuery ($first: Int = 1000, $pairs: [String!]) {
   burns(first: $first, orderBy: timestamp, orderDirection: desc, where: { pair_in: $pairs }) {
     amount0
     amount1
+    amountUSD
     to
     pair {
       ...PairTokensFragment

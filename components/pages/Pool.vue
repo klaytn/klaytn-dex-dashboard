@@ -63,12 +63,15 @@
               <div slot="title">Volume 24H</div>
               <template slot="content">
                 <span>${{ tradeVolumeDay }}</span>
-                <shared-value-difference :value="tradeVolumeChange" />
+                <shared-value-difference :value="tradeVolumeDayChange" />
               </template>
             </shared-stats-block>
             <shared-stats-block>
               <div slot="title">Volume 7D</div>
-              <div slot="content">${{ tradeVolumeWeek }}</div>
+              <template slot="content">
+                <span>${{ tradeVolumeWeek }}</span>
+                <shared-value-difference :value="tradeVolumeWeekChange" />
+              </template>
             </shared-stats-block>
             <shared-stats-block>
               <div slot="title">Transactions 24H</div>
@@ -179,11 +182,14 @@ export default {
     tradeVolumeDay() {
       return formatAmount(this.pair.tradeVolumeDay ?? 0);
     },
+    tradeVolumeDayChange() {
+      return this.pair.tradeVolumeDayChange ?? 0;
+    },
     tradeVolumeWeek() {
       return formatAmount(this.pair.tradeVolumeWeek ?? 0);
     },
-    tradeVolumeChange() {
-      return this.pair.tradeVolumeChange ?? 0;
+    tradeVolumeWeekChange() {
+      return this.pair.tradeVolumeWeekChange ?? 0;
     },
     transactionsDay() {
       return this.pair.transactionsDay ?? 0;
