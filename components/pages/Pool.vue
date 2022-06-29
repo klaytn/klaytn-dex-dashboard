@@ -1,6 +1,17 @@
 <template>
   <div>
-    <ui-breadcrumbs :items="breadcrumbs" />
+    <ui-breadcrumbs :items="breadcrumbs">
+      <template #default="{ name: itemName }">
+        <template v-if="itemName === name">
+          {{ itemName }}
+          <a :href="pairLink" target="_blank" rel="noopener noreferrer">
+            ({{ formattedAddress }})
+          </a>
+        </template>
+
+        <template v-else>{{ itemName }}</template>
+      </template>
+    </ui-breadcrumbs>
 
     <ui-container>
       <shared-stats-card>
@@ -115,7 +126,7 @@ import { TransactionsExplorer, PairsExplorer } from '@/services/subgraph/explore
 
 import { PairChartTags } from '@/consts';
 
-import { formatAmount } from '@/utils/formatters';
+import { formatAmount, formatAddress } from '@/utils/formatters';
 import { lineChartSpec, barChartSpec } from '@/utils/chartSpecs';
 
 import { NetworkExplorer, ExchangeExplorer } from '@/utils/explorer';
@@ -206,6 +217,10 @@ export default {
     },
     swapLink() {
       return ExchangeExplorer.swapLink(this.token0Id, this.token1Id);
+    },
+
+    formattedAddress() {
+      return formatAddress(this.id, 8);
     },
 
     breadcrumbs() {

@@ -6,6 +6,14 @@ class Explorer {
   contractLink(address) {
     return `${this.url}account/${address}`;
   }
+
+  transactionLink(address) {
+    return `${this.url}tx/${address}`;
+  }
+
+  accountLink(address) {
+    return `${this.url}account/${address}`;
+  }
 }
 
 class AppExplorer {

@@ -1,7 +1,11 @@
 <template>
   <div class="ui-breadcrumbs">
     <template v-for="(item, index) in items">
-      <nuxt-link :to="item.to" :key="index" :tag="item.disabled ? 'span' : 'a'">{{ item.name }}</nuxt-link>
+      <component :is="item.disabled ? 'span' : 'nuxt-link'" :to="item.to" :key="index">
+        <slot v-bind="item">
+          {{ item.name }}
+        </slot>
+      </component>
       <icon v-if="index !== items.length - 1" :key="`arrow-${index}`" name="next" class="arrow" />
     </template>
   </div>
@@ -16,9 +20,6 @@ export default {
       default: () => ([]),
     },
   },
-  mounted() {
-    console.log(this.$route)
-  }
 };
 </script>
 

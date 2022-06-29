@@ -10,7 +10,9 @@
         <ui-tags v-model="type" :tags="types" />
       </template>
       <template v-slot="{ row }">
-        <span>{{ row.type }} {{ row.token0.symbol }} {{ formatType(row.type) }} {{ row.token1.symbol }}</span>
+        <a :href="transactionLink(row.id)" target="_blank" rel="noopener noreferrer">
+          {{ row.type }} {{ row.token0.symbol }} {{ formatType(row.type) }} {{ row.token1.symbol }}
+        </a>
       </template>
     </el-table-column>
 
@@ -46,7 +48,9 @@
       prop="from"
     >
       <template v-slot="{ row }">
-        <span>{{ formatAddress(row.from, 12) }}</span>
+        <a :href="accountLink(row.from)" target="_blank" rel="noopener noreferrer">
+          {{ formatAddress(row.from, 12) }}
+        </a>
       </template>
     </el-table-column>
 
@@ -66,6 +70,7 @@ import dayjs from 'dayjs';
 
 import { TransactionTypes } from '@/consts';
 import { formatAmount, formatAddress } from '@/utils/formatters';
+import { NetworkExplorer } from '@/utils/explorer';
 
 export default {
   name: "TransactionsTable",
@@ -114,6 +119,12 @@ export default {
     formatType(type) {
       return type === TransactionTypes.swap ? 'for' : 'and';
     },
+    transactionLink(id) {
+      return NetworkExplorer.transactionLink(id);
+    },
+    accountLink(address) {
+      return NetworkExplorer.accountLink(address);
+    }
   },
 }
 </script>

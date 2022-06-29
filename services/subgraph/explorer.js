@@ -135,7 +135,7 @@ class Tokens extends SubgraphExplorer {
 
       if (item.timestamp === prevDayTimestamp) {
         tradeVolumeDayPrev += tradeVolume;
-      } else if (item.timestamp <= dayTimestamp) {
+      } else if (item.timestamp >= dayTimestamp) {
         const lastPrice = item.price;
         const lastTotalLiquidity = item.totalLiquidity;
 
@@ -258,7 +258,7 @@ class Pairs extends SubgraphExplorer {
 
       if (item.timestamp === prevDayTimestamp) {
         tradeVolumeDayPrev += tradeVolume;
-      } else if (item.timestamp <= dayTimestamp) {
+      } else if (item.timestamp >= dayTimestamp) {
         const lastTotalLiquidity = item.totalLiquidity;
 
         tradeVolumeDay += tradeVolume;

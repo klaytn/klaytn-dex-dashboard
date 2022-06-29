@@ -1,6 +1,17 @@
 <template>
   <div>
-    <ui-breadcrumbs :items="breadcrumbs" />
+    <ui-breadcrumbs :items="breadcrumbs">
+      <template #default="{ name }">
+        <template v-if="name === symbol">
+          {{ name }}
+          <a :href="tokenLink" target="_blank" rel="noopener noreferrer">
+            ({{ formattedAddress }})
+          </a>
+        </template>
+
+        <template v-else>{{ name }}</template>
+      </template>
+    </ui-breadcrumbs>
 
     <ui-container>
       <shared-stats-card v-loading="tokenLoading">
@@ -120,9 +131,6 @@ export default {
       pairsLoading: false,
       transactions: [],
       transactionsLoading: false,
-      // formatters
-      formatAmount,
-      formatAddress,
     }
   },
   computed: {
@@ -185,6 +193,10 @@ export default {
       return ExchangeExplorer.swapLink(this.id);
     },
 
+    formattedAddress() {
+      return formatAddress(this.id, 8);
+    },
+
     breadcrumbs() {
       return [
         {
@@ -196,7 +208,7 @@ export default {
           to: { name: 'tokens' }
         },
         {
-          name: `${this.symbol}(${this.formatAddress(this.id, 8)})`,
+          name: this.symbol,
           to: { name: 'tokens-id', params: { id: this.id } },
           disabled: true,
         },
