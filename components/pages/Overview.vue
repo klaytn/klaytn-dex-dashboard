@@ -270,12 +270,13 @@ export default {
 .charts-items {
   display: flex;
   flex: 1;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
   margin: -10px;
 
   .chart-item {
     flex: 1;
     width: calc(100% - 10px);
+    min-width: 320px;
     padding: 10px;
   }
 }

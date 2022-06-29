@@ -2,8 +2,9 @@
   <main class="layout">
     <header>
       <div class="col">
-        <a href="#">
-          <img src="~assets/svg/logo.svg" />
+        <a href="#" class="app-logo">
+          <span class="app-logo-icon"></span>
+          <span>DEX Charts</span>
         </a>
       </div>
       <div class="col col-center">
@@ -50,7 +51,11 @@ export default {
 
 <style scoped lang="scss">
 .layout {
-  padding: 40px;
+  padding: 32px 40px;
+
+  @media screen and (max-width: $screen-sm) {
+    padding: 16px 8px;
+  }
 
   &-main {
     margin: auto;
@@ -67,8 +72,12 @@ export default {
     align-items: center;
     margin-bottom: 82px;
 
+    @media screen and (max-width: $screen-md) {
+      margin-bottom: 25px;
+    }
+
     & .col {
-      width: 33.33%;
+      width: calc(100% / 3);
       display: flex;
     }
 
@@ -102,6 +111,32 @@ export default {
     position: fixed;
     bottom: 64px;
     right: 24px;
+  }
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
+
+  font-weight: 800;
+  font-size: 22px;
+  line-height: 1.5;
+  color: $dark2;
+
+  &-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: $dark2;
+
+    & + span {
+      margin-left: 6px;
+
+      @media screen and (max-width: $screen-md) {
+        display: none;
+      }
+    }
   }
 }
 </style>
