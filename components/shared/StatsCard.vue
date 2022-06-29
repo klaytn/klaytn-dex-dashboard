@@ -35,15 +35,33 @@ export default {
 .stats-card {
   &-head {
     display: flex;
+    flex-flow: row wrap;
     align-items: center;
     justify-content: space-between;
     padding: 16px 24px;
     border-bottom: 1px solid $gray5;
+
+    @media screen and (max-width: $screen-md) {
+      padding: 16px;
+
+      & > *:not(:last-child) {
+        margin-bottom: 16px;
+      }
+    }
   }
 
   &-aside {
+    width: 100%;
+
     & > * {
       padding: 24px 0px;
+
+      @media screen and (max-width: $screen-md) {
+        padding: 8px 0px;
+        display: flex;
+        flex-flow: row wrap;
+        align-items: flex-start;
+      }
 
       &:not(:last-child) {
         border-bottom: 1px solid $gray5;
@@ -65,6 +83,10 @@ export default {
     line-height: 24px;
     color: $dark2;
 
+    @media screen and (max-width: $screen-md) {
+      padding: 8px 0;
+    }
+
     & > * {
       &:not(:last-child) {
         margin-right: 10px;
@@ -72,10 +94,24 @@ export default {
     }
   }
 
-  &-body,
-  &-buttons {
+  &-body {
     display: flex;
     flex-flow: row nowrap;
+
+    @media screen and (max-width: $screen-md) {
+      flex-flow: row wrap;
+    }
+  }
+
+  &-buttons {
+    display: flex;
+    flex-flow: row wrap;
+
+    @media screen and (max-width: $screen-md) {
+      & > *:not(:last-child) {
+        margin-bottom: 8px;
+      }
+    }
   }
 
   &-buttons {
@@ -87,6 +123,15 @@ export default {
   &-column {
     display: flex;
     padding: 0 24px;
+
+    @media screen and (max-width: $screen-md) {
+      width: 100%;
+      padding: 0px 8px;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid $gray5;
+      }
+    }
 
     &.fullwidth {
       flex: 1;

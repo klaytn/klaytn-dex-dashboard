@@ -23,6 +23,11 @@ export default {
 
 <style lang="scss" scoped>
 .stats-block {
+  @media screen and (max-width: $screen-md) {
+    padding: 8px;
+    width: 50%;
+  }
+
   &-title {
     font-size: 12px;
     font-weight: 500;
@@ -51,6 +56,10 @@ export default {
 
   & + & {
     margin-top: 16px;
+
+    @media screen and (max-width: $screen-md) {
+      margin-top: 0px;
+    }
   }
 }
 </style>

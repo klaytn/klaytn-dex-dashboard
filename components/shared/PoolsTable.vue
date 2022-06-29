@@ -9,9 +9,12 @@
       <el-table-column
         label="#"
         width="84"
+        class-name="screen-md"
       >
         <template v-slot="{ $index }">
-          <span>{{ startIndex + $index + 1 }}</span>
+          <div class="cell-data">
+            <span>{{ startIndex + $index + 1 }}</span>
+          </div>
         </template>
       </el-table-column>
 
@@ -32,8 +35,10 @@
         prop="totalLiquidity"
         label="TVL"
       >
-        <template v-slot="{ row }">
-          <span>${{ formatAmount(row.totalLiquidity) }}</span>
+        <template v-slot="{ row, column }">
+          <div class="cell-data" :data-label="column.label">
+            <span>${{ formatAmount(row.totalLiquidity) }}</span>
+          </div>
         </template>
       </el-table-column>
 
@@ -41,8 +46,10 @@
         prop="tradeVolumeDay"
         label="Volume 24H"
       >
-        <template v-slot="{ row }">
-          <span>${{ formatAmount(row.tradeVolumeDay) }}</span>
+        <template v-slot="{ row, column }">
+          <div class="cell-data" :data-label="column.label">
+            <span>${{ formatAmount(row.tradeVolumeDay) }}</span>
+          </div>
         </template>
       </el-table-column>
 
@@ -50,8 +57,10 @@
         prop="tradeVolumeWeek"
         label="Volume 7D"
       >
-        <template v-slot="{ row }">
-          <span>${{ formatAmount(row.tradeVolumeWeek) }}</span>
+        <template v-slot="{ row, column }">
+          <div class="cell-data" :data-label="column.label">
+            <span>${{ formatAmount(row.tradeVolumeWeek) }}</span>
+          </div>
         </template>
       </el-table-column>
     </template>

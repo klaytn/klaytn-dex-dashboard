@@ -70,6 +70,8 @@
                 <shared-value-difference :value="liquidityChange" />
               </template>
             </shared-stats-block>
+          </div>
+          <div>
             <shared-stats-block>
               <div slot="title">Volume 24H</div>
               <template slot="content">
@@ -84,6 +86,8 @@
                 <shared-value-difference :value="tradeVolumeWeekChange" />
               </template>
             </shared-stats-block>
+          </div>
+          <div>
             <shared-stats-block>
               <div slot="title">Transactions 24H</div>
               <div slot="content">{{ transactionsDay }}</div>

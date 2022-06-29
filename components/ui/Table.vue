@@ -104,6 +104,41 @@ export default {
 }
 
 .ui-table {
+  @media screen and (max-width: $screen-md) {
+    thead {
+      display: block;
+
+      th:not(.visible) {
+        display: none;
+      }
+    }
+
+    table, tbody, tr, td {
+      display: block;
+      width: initial !important;
+    }
+
+    tr {
+      padding: 16px 0px;
+
+      & + tr {
+        border-top: 2px solid $gray3;
+      }
+    }
+
+    &.el-table {
+      th.el-table__cell.is-leaf,
+      td.el-table__cell {
+        border-bottom: none;
+        padding: 6px 0px;
+      }
+    }
+
+    .screen-md {
+      display: none;
+    }
+  }
+
   th {
     color: $gray4;
     font-weight: 500;
@@ -125,6 +160,30 @@ export default {
     align-items: center;
     min-height: 24px;
 
+    &-data {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      @media screen and (max-width: $screen-md) {
+        flex: 1;
+      }
+
+      &:before {
+        content: attr(data-label)"";
+
+        display: none;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 15px;
+        color: $gray4;
+
+        @media screen and (max-width: $screen-md) {
+          display: inline-block;
+        }
+      }
+    }
+
     & > *:not(:last-child) {
       margin-right: 8px;
     }
@@ -135,6 +194,11 @@ export default {
     th.el-table__cell > .cell {
       padding-left: 24px;
       padding-right: 24px;
+
+      @media screen and (max-width: $screen-md) {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
     }
   }
 }

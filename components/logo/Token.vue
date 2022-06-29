@@ -57,6 +57,7 @@ export default {
 <style lang="scss" scoped>
 .logo-token {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   border-radius: 50%;

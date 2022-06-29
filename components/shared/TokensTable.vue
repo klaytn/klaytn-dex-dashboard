@@ -9,6 +9,7 @@
       <el-table-column
         label="#"
         width="84"
+        class-name="screen-md"
       >
         <template v-slot="{ $index }">
           <span>{{ startIndex + $index + 1 }}</span>
@@ -29,8 +30,10 @@
         prop="price"
         label="Price"
       >
-        <template v-slot="{ row }">
-          <span>${{ formatAmount(row.price) }}</span>
+        <template v-slot="{ row, column }">
+          <div class="cell-data" :data-label="column.label">
+            <span>${{ formatAmount(row.price) }}</span>
+          </div>
         </template>
       </el-table-column>
 
@@ -38,8 +41,10 @@
         prop="priceChange"
         label="Price Change"
       >
-        <template v-slot="{ row }">
-          <span>{{ formatAmount(row.priceChange) }}%</span>
+        <template v-slot="{ row, column }">
+          <div class="cell-data" :data-label="column.label">
+            <span>{{ formatAmount(row.priceChange) }}%</span>
+          </div>
         </template>
       </el-table-column>
 
@@ -47,8 +52,10 @@
         prop="tradeVolumeDay"
         label="Volume 24H"
       >
-        <template v-slot="{ row }">
-          <span>${{ formatAmount(row.tradeVolumeDay) }}</span>
+        <template v-slot="{ row, column }">
+          <div class="cell-data" :data-label="column.label">
+            <span>${{ formatAmount(row.tradeVolumeDay) }}</span>
+          </div>
         </template>
       </el-table-column>
 
@@ -56,8 +63,10 @@
         prop="totalLiquidity"
         label="TVL"
       >
-        <template v-slot="{ row }">
-          <span>${{ formatAmount(row.totalLiquidity) }}</span>
+        <template v-slot="{ row, column }">
+          <div class="cell-data" :data-label="column.label">
+            <span>${{ formatAmount(row.totalLiquidity) }}</span>
+          </div>
         </template>
       </el-table-column>
     </template>

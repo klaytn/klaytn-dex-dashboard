@@ -100,7 +100,8 @@ export default {
 
 <style lang="scss">
 .ui-chart {
-  height: 400px;
+  height: 100%;
+  min-height: 400px;
   width: 100%;
   max-width: 100%;
 

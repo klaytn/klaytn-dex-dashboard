@@ -5,7 +5,7 @@
     :loading="loading"
     style="width: 100%"
   >
-    <el-table-column width="252">
+    <el-table-column width="252" class-name="visible">
       <template #header>
         <ui-tags v-model="type" :tags="types" />
       </template>
@@ -20,8 +20,10 @@
       label="Total Value"
       prop="value"
     >
-      <template v-slot="{ row }">
-        <span>${{ formatAmount(row.value) }}</span>
+      <template v-slot="{ row, column }">
+        <div class="cell-data" :data-label="column.label">
+          <span>${{ formatAmount(row.value) }}</span>
+        </div>
       </template>
     </el-table-column>
 
@@ -29,8 +31,10 @@
       label="Token Amount"
       prop="amount0"
     >
-      <template v-slot="{ row }">
-        <span>{{ formatAmount(row.amount0) }} {{ row.token0.symbol }}</span>
+      <template v-slot="{ row,column }">
+        <div class="cell-data" :data-label="column.label">
+          <span>{{ formatAmount(row.amount0) }} {{ row.token0.symbol }}</span>
+        </div>
       </template>
     </el-table-column>
 
@@ -38,8 +42,10 @@
       label="Token Amount"
       prop="amount1"
     >
-      <template v-slot="{ row }">
-        <span>{{ formatAmount(row.amount1) }} {{ row.token1.symbol }}</span>
+      <template v-slot="{ row, column }">
+        <div class="cell-data" :data-label="column.label">
+          <span>{{ formatAmount(row.amount1) }} {{ row.token1.symbol }}</span>
+        </div>
       </template>
     </el-table-column>
 
@@ -47,10 +53,12 @@
       label="Account"
       prop="from"
     >
-      <template v-slot="{ row }">
-        <a :href="accountLink(row.from)" target="_blank" rel="noopener noreferrer">
-          {{ formatAddress(row.from, 12) }}
-        </a>
+      <template v-slot="{ row, column }">
+        <div class="cell-data" :data-label="column.label">
+          <a :href="accountLink(row.from)" target="_blank" rel="noopener noreferrer">
+            {{ formatAddress(row.from, 12) }}
+          </a>
+        </div>
       </template>
     </el-table-column>
 
@@ -58,8 +66,10 @@
       label="Time"
       prop="timestamp"
     >
-      <template v-slot="{ row }">
-        <span>{{ formatTime(row.timestamp) }}</span>
+      <template v-slot="{ row, column }">
+        <div class="cell-data" :data-label="column.label">
+          <span>{{ formatTime(row.timestamp) }}</span>
+        </div>
       </template>
     </el-table-column>
   </ui-table>

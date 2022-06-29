@@ -62,6 +62,8 @@
                 <shared-value-difference :value="tradeVolumeWeekChange" />
               </template>
             </shared-stats-block>
+          </div>
+          <div>
             <shared-stats-block>
               <div slot="title">Transactions 24H</div>
               <div slot="content">{{ transactionsDay }}</div>
