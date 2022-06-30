@@ -106,10 +106,11 @@ export default {
   max-width: 100%;
 
   &-card {
-    padding: 16px 0;
+    height: 100%;
+    padding: 16px;
     position: relative;
 
-    &.transparent {
+    &.ui-card.transparent {
       background: transparent;
       box-shadow: none;
     }

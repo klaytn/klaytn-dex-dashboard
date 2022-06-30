@@ -3,7 +3,7 @@
     <ui-title>
       <div>Top Pools</div>
     </ui-title>
-    <shared-pools-table :data="pairs" :loading="pairsLoading" />
+    <shared-pools-table :data="pairs" :loading="pairsLoading"></shared-pools-table>
   </ui-container>
 </template>
 

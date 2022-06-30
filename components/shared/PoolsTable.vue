@@ -5,6 +5,9 @@
     :loading="loading"
     style="width: 100%"
   >
+    <template #head>
+      <slot name="head" />
+    </template>
     <template v-slot="{ startIndex }">
       <el-table-column
         label="#"

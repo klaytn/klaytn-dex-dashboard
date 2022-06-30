@@ -3,7 +3,7 @@
     <ui-title>
       <div>Tokens</div>
     </ui-title>
-    <shared-tokens-table :loading="tokensLoading" :data="tokens" />
+    <shared-tokens-table :loading="tokensLoading" :data="tokens"></shared-tokens-table>
   </ui-container>
 </template>
 

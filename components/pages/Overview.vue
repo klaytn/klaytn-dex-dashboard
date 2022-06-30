@@ -32,24 +32,27 @@
       </div>
     </ui-container>
     <ui-container>
-      <ui-title>
-        <div>Tokens</div>
-        <ui-link :to="{ name: 'tokens' }">All tokens</ui-link>
-      </ui-title>
-      <shared-tokens-table :loading="tokensLoading" :data="tokens" />
+      <shared-tokens-table :loading="tokensLoading" :data="tokens">
+        <ui-title slot="head">
+          <div>Tokens</div>
+          <ui-link :to="{ name: 'tokens' }">All tokens</ui-link>
+        </ui-title>
+      </shared-tokens-table>
     </ui-container>
     <ui-container>
-      <ui-title>
-        <div>Top Pools</div>
-        <ui-link :to="{ name: 'pools' }">All pools</ui-link>
-      </ui-title>
-      <shared-pools-table :loading="pairsLoading" :data="pairs" />
+      <shared-pools-table :loading="pairsLoading" :data="pairs">
+        <ui-title slot="head">
+          <div>Top Pools</div>
+          <ui-link :to="{ name: 'pools' }">All pools</ui-link>
+        </ui-title>
+      </shared-pools-table>
     </ui-container>
     <ui-container>
-      <ui-title>
-        <div>Transactions</div>
-      </ui-title>
-      <shared-transactions-table :loading="transactionsLoading" :data="transactions" />
+      <shared-transactions-table :loading="transactionsLoading" :data="transactions">
+        <ui-title slot="head">
+          <div>Transactions</div>
+        </ui-title>
+      </shared-transactions-table>
     </ui-container>
   </div>
 </template>

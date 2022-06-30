@@ -1,27 +1,32 @@
 <template>
-  <ui-card v-loading="loading">
-    <el-table
-      :data="items"
-      size="big"
-      v-bind="$attrs"
-      v-on="$listeners"
-      style="width: 100%"
-      class="ui-table"
-    >
-      <slot v-bind="{ startIndex }" />
-    </el-table>
-    <el-pagination
-      class="ui-pagination"
-      layout="slot"
-      :current-page="page"
-      :page-size="pageSize"
-      :total="total"
-    >
-      <icon class="ui-pagination-control ui-pagination-control--prev" name="union" @click.native="handlePrev" />
-      <div class="ui-pagination-page">Page {{ page }} of {{ pages }}</div>
-      <icon class="ui-pagination-control ui-pagination-control--next" name="union" @click.native="handleNext" />
-    </el-pagination>
-  </ui-card>
+  <collapse class="ui-table-collapse">
+    <template #head>
+      <slot name="head" />
+    </template>
+    <ui-card v-loading="loading">
+      <el-table
+        :data="items"
+        size="big"
+        v-bind="$attrs"
+        v-on="$listeners"
+        style="width: 100%"
+        class="ui-table"
+      >
+        <slot v-bind="{ startIndex }" />
+      </el-table>
+      <el-pagination
+        class="ui-pagination"
+        layout="slot"
+        :current-page="page"
+        :page-size="pageSize"
+        :total="total"
+      >
+        <icon class="ui-pagination-control ui-pagination-control--prev" name="union" @click.native="handlePrev" />
+        <div class="ui-pagination-page">Page {{ page }} of {{ pages }}</div>
+        <icon class="ui-pagination-control ui-pagination-control--next" name="union" @click.native="handleNext" />
+      </el-pagination>
+    </ui-card>
+  </collapse>
 </template>
 
 <script>
@@ -107,6 +112,10 @@ export default {
   @media screen and (max-width: $screen-md) {
     thead {
       display: block;
+
+      tr {
+        padding: 0;
+      }
 
       th:not(.visible) {
         display: none;
@@ -198,6 +207,17 @@ export default {
       @media screen and (max-width: $screen-md) {
         padding-left: 16px;
         padding-right: 16px;
+      }
+    }
+  }
+
+  &-collapse {
+    @media screen and (max-width: $screen-md) {
+      background: $white;
+      border-radius: 16px;
+
+      .collapse--head {
+        padding: 0px 16px;
       }
     }
   }

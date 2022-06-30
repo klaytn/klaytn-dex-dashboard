@@ -21,5 +21,13 @@ export default {
   line-height: 24px;
   color: $dark2;
   padding: 8px 0px;
+
+  & > *:not(:last-child) {
+    margin-right: 8px;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    flex: 1;
+  }
 }
 </style>

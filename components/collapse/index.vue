@@ -2,11 +2,13 @@
   <div class="collapse">
     <div class="collapse--head" @click="isOpen = !isOpen">
       <slot name="head"></slot>
-      <div class="icon-wrap" :style="{transform: `rotate(${isOpen ? 180 : 0}deg)`}">
+      <div v-if="$slots.head" class="icon-wrap" :style="{transform: `rotate(${isOpen ? 180 : 0}deg)`}">
         <Icon name="collapse-arrow" />
       </div>
     </div>
-    <slot v-if="isOpen" name="main"></slot>
+    <div :class="['collapse--body', { closed: !isOpen }]">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
@@ -15,7 +17,7 @@ export default {
   name: "KlayCollapse",
   data() {
     return {
-      isOpen: false,
+      isOpen: true,
     }
   },
 }
@@ -23,22 +25,32 @@ export default {
 
 <style scoped lang="scss">
 .collapse {
-  border: 1px solid $gray3;
-  box-sizing: border-box;
-  border-radius: 8px;
-  padding: 8px 16px;
-  background: $white;
-  text-align: left;
-
   &--head {
     width: 100%;
     display: flex;
     align-items: center;
   }
 
+  &--body {
+    display: flex;
+    flex-flow: column nowrap;
+
+    @media screen and (max-width: $screen-md) {
+      &.closed {
+        display: none;
+      }
+    }
+  }
+
   & .icon-wrap {
     margin-left: auto;
     display: flex;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    .icon-wrap {
+      display: none;
+    }
   }
 }
 </style>

@@ -115,10 +115,11 @@
     </ui-container>
 
     <ui-container>
-      <ui-title>
-        <div>Transactions</div>
-      </ui-title>
-      <shared-transactions-table :loading="transactionsLoading" :data="transactions" />
+      <shared-transactions-table :loading="transactionsLoading" :data="transactions">
+        <ui-title slot="head">
+          <div>Transactions</div>
+        </ui-title>
+      </shared-transactions-table>
     </ui-container>
   </div>
 </template>
