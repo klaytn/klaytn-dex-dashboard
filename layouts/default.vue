@@ -12,6 +12,7 @@
       </div>
 
       <div class="col col-right">
+        <!-- <input /> -->
         <!-- Search & button -->
       </div>
     </header>

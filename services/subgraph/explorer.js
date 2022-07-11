@@ -308,9 +308,9 @@ class Pairs extends SubgraphExplorer {
 class Transactions extends SubgraphExplorer {
   async getTransactions(vars) {
     try {
-      const { transactions } = await this.request(OverviewTransactionsQuery, vars);
+      const data = await this.request(OverviewTransactionsQuery, vars);
 
-      return transactions.map(tx => this.formatTransactionEvents(tx));
+      return this.formatEvents(data);
     } catch (error) {
       console.error(error);
       return [];
@@ -374,33 +374,6 @@ class Transactions extends SubgraphExplorer {
       token0,
       token1,
     };
-  }
-
-  formatTransactionEvents(data) {
-    const attrs = this.formatTransaction(data);
-
-    if (data.swaps.length !== 0) {
-      const tx = this.formatSwap(data.swaps[0]);
-
-      return {
-        ...attrs,
-        ...tx,
-      }
-    }
-
-    if (data.mints.length !== 0 || data.burns.length !== 0) {
-      const type = data.mints.length !== 0 ? TransactionTypes.add : TransactionTypes.remove;
-      const prop = data.mints.length !== 0 ? 'mints' : 'burns';
-
-      const tx = this.formatMintOrBurn(data[prop][0], type);
-
-      return {
-        ...attrs,
-        ...tx,
-      }
-    }
-
-    return null;
   }
 
   formatEvents({ swaps, mints, burns }) {

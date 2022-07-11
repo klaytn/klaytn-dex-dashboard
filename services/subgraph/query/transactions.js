@@ -17,37 +17,45 @@ const PairTokensFragment = gql`
 
 export const OverviewTransactionsQuery = gql`
 query OverviewTransactionsQuery ($first: Int = 50) {
-  transactions(first: $first, orderBy: timestamp, orderDirection: desc) {
-    id
-    timestamp
-    swaps {
-      amount0In
-      amount0Out
-      amount1In
-      amount1Out
-      amountUSD
-      from
-      pair {
-        ...PairTokensFragment
-      }
+  swaps(first: $first, orderBy: timestamp, orderDirection: desc) {
+    amount0In
+    amount0Out
+    amount1In
+    amount1Out
+    amountUSD
+    from
+    pair {
+      ...PairTokensFragment
     }
-    mints {
-      amount0
-      amount1
-      amountUSD
-      to
-      pair {
-        ...PairTokensFragment
-      }
+    transaction {
+      id
+      timestamp
     }
-    burns {
-      amount0
-      amount1
-      amountUSD
-      to
-      pair {
-        ...PairTokensFragment
-      }
+  }
+  mints(first: $first, orderBy: timestamp, orderDirection: desc) {
+    amount0
+    amount1
+    amountUSD
+    to
+    pair {
+      ...PairTokensFragment
+    }
+    transaction {
+      id
+      timestamp
+    }
+  }
+  burns(first: $first, orderBy: timestamp, orderDirection: desc) {
+    amount0
+    amount1
+    amountUSD
+    to
+    pair {
+      ...PairTokensFragment
+    }
+    transaction {
+      id
+      timestamp
     }
   }
 }
