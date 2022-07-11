@@ -21,10 +21,36 @@ query TokensSearchQuery ($value: String) {
 `;
 
 export const PairsSearchQuery = gql`
-query PairsSearchQuery ($id: String, $tokens: [ID]!) {
+query PairsSearchQuery ($id: String, $ids: [ID]!) {
   byAddress: pairs(where: { id: $id }) {
     id
     name
+    token0 {
+      id
+    }
+    token1 {
+      id
+    }
+  }
+  byToken0: pairs(where: { token0_in: $ids }) {
+    id
+    name
+    token0 {
+      id
+    }
+    token1 {
+      id
+    }
+  }
+  byToken1: pairs(where: { token1_in: $ids }) {
+    id
+    name
+    token0 {
+      id
+    }
+    token1 {
+      id
+    }
   }
 }
 `;

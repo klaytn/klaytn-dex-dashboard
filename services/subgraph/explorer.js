@@ -4,6 +4,7 @@ import SubgraphClient from './client';
 
 import { OverviewTokensQuery, TokenPairsQuery, TokenQuery } from './query/tokens';
 import { OverviewPairsQuery, PairQuery } from './query/pools';
+import { TokensSearchQuery, PairsSearchQuery } from './query/search';
 import { OverviewTransactionsQuery, TransactionsByPairsQuery } from '@/services/subgraph/query/transactions';
 
 import { TransactionTypes } from '@/consts';
@@ -385,6 +386,31 @@ class Transactions extends SubgraphExplorer {
   }
 }
 
+class Search extends SubgraphExplorer {
+  async search(value) {
+    const { byAddress: byTokenAddress, byName, bySymbol } = await this.request(TokensSearchQuery, { value });
+    const tokensMap = [...byName, ...bySymbol, ...byTokenAddress].reduce((buffer, token) => ({
+      ...buffer,
+      [token.id]: token,
+    }), {});
+
+    const ids = Object.keys(tokensMap);
+
+    const { byAddress: byPairAddress, byToken0, byToken1 } = await this.request(PairsSearchQuery, { ids });
+
+    const pairsMap = [...byToken0, ...byToken1, ...byPairAddress].reduce((buffer, pair) => ({
+      ...buffer,
+      [pair.id]: pair,
+    }), {});
+
+    return {
+      tokens: Object.values(tokensMap),
+      pairs: Object.values(pairsMap),
+    };
+  }
+}
+
 export const TokensExplorer = new Tokens();
 export const PairsExplorer = new Pairs();
 export const TransactionsExplorer = new Transactions();
+export const SearchExplorer = new Search();

@@ -12,8 +12,9 @@
       </div>
 
       <div class="col col-right">
-        <!-- <input /> -->
-        <!-- Search & button -->
+        <!-- <search-input v-model="query" placeholder="Search token/pool">
+          <search-results :results="searchResults" />
+        </search-input> -->
       </div>
     </header>
 
@@ -25,8 +26,21 @@
 </template>
 
 <script>
+import { SearchExplorer } from '@/services/subgraph/explorer';
+
 export default {
   name: "KlayView",
+  data() {
+    return {
+      query: '',
+      searchResults: {},
+    }
+  },
+  watch: {
+    query: {
+      handler: 'search',
+    },
+  },
   computed: {
     links() {
       return [
@@ -46,7 +60,15 @@ export default {
       ]
     },
   },
-  methods: {},
+  methods: {
+    async search(value) {
+      if (!value) {
+        this.searchResults = {};
+      } else {
+        this.searchResults = await SearchExplorer.search(value);
+      }
+    }
+  },
 }
 </script>
 
