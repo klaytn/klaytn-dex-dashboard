@@ -61,20 +61,13 @@
 import dayjs from 'dayjs';
 
 import SubgraphClient from '@/services/subgraph/client';
-import { TokensExplorer, PairsExplorer, TransactionsExplorer } from '@/services/subgraph/explorer';
+import { TokensExplorer, PairsExplorer, TransactionsExplorer, FactoryExplorer } from '@/services/subgraph/explorer';
 
-import { OverviewFactoryDailyVolume, OverviewFactoryTotalLiquidity, PairDayDatas } from '@/services/subgraph/query/factory';
+import { PairDayDatas } from '@/services/subgraph/query/factory';
 import { DateTags } from '@/consts';
 
 import { lineChartSpec, barChartSpec } from '@/utils/chartSpecs';
 import { formatAmount } from '@/utils/formatters';
-
-const formatfactoryVolumeData = (data) => {
-  return {
-    timestamp: +data.timestamp * 1000,
-    value: +data.dailyVolumeUSD,
-  };
-};
 
 const formatFactoryTotalLiquidityData = (data) => {
   return {
@@ -241,16 +234,9 @@ export default {
     },
 
     async updateFactoryVolumeData() {
-      try {
-        this.factoryVolumeDataLoading = true;
-        const { data: { factoryDayDatas } } = await SubgraphClient.query(OverviewFactoryDailyVolume).toPromise();
-        this.factoryVolumeData = factoryDayDatas.map(data => formatfactoryVolumeData(data));
-      } catch (error) {
-        console.error(error);
-        this.factoryVolumeData = [];
-      } finally {
-        this.factoryVolumeDataLoading = false;
-      }
+      this.factoryVolumeDataLoading = true;
+      this.factoryVolumeData = await FactoryExplorer.getVolumeDayData();
+      this.factoryVolumeDataLoading = false;
     },
 
     async updateFactoryTotalLiquidityData() {

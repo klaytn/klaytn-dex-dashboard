@@ -5,7 +5,8 @@ import SubgraphClient from './client';
 import { OverviewTokensQuery, TokenPairsQuery, TokenQuery } from './query/tokens';
 import { OverviewPairsQuery, PairQuery } from './query/pools';
 import { TokensSearchQuery, PairsSearchQuery } from './query/search';
-import { OverviewTransactionsQuery, TransactionsByPairsQuery } from '@/services/subgraph/query/transactions';
+import { OverviewTransactionsQuery, TransactionsByPairsQuery } from './query/transactions';
+import { OverviewFactoryDailyVolume } from './query/factory';
 
 import { TransactionTypes } from '@/consts';
 
@@ -15,26 +16,27 @@ const calcChange = (current, last) => {
   return divider !== 0 ? (current - last) * 100 / divider : 0;
 };
 
-const normalizeDayData = (dayData) => {
+const normalizeDayData = (dayData, overrideFields = ['tradeVolume', 'totalTransactions']) => {
   if (!dayData.length) return [];
 
-  const buffer = [dayData[0]];
+  const buffer = [];
   const diff = 24 * 60 * 60 * 1000;
   const now = dayjs().utc().startOf('day').unix() * 1000;
 
-  let i = 1;
+  let i = 0;
 
   for (let currentTimestamp = dayData[0].timestamp; currentTimestamp <= now; currentTimestamp += diff) {
     const curr = dayData[i];
     const prev = dayData[i - 1];
 
-    if (!curr || curr.timestamp > currentTimestamp) {
-      buffer.push({
-        ...prev,
-        tradeVolume: 0,
-        totalTransactions: 0,
-        timestamp: currentTimestamp,
-      });
+    if (prev && (!curr || curr.timestamp > currentTimestamp)) {
+      const currUpdated = { ...prev, timestamp: currentTimestamp };
+
+      overrideFields.forEach((field) => {
+        currUpdated[field] = 0;
+      })
+
+      buffer.push(currUpdated);
     } else {
       buffer.push(curr);
       i++;
@@ -100,9 +102,11 @@ class Tokens extends SubgraphExplorer {
     // 2 days before
     const prevDayTimestamp = dayTimestamp - 24 * 60 * 60 * 1000;
 
-    const dayData = normalizeDayData(data.dayData
-      .map(dayData => this.formatTokenDayData(dayData))
-      .sort((a, b) => a.timestamp - b.timestamp));
+    const sortedByTimestampAsc = data.dayData
+    .map(dayData => this.formatTokenDayData(dayData))
+    .sort((a, b) => a.timestamp - b.timestamp);
+
+    const dayData = normalizeDayData(sortedByTimestampAsc);
 
     const price = Number(data.derivedUSD);
     const totalLiquidity = Number(data.totalLiquidity) * price;
@@ -217,12 +221,11 @@ class Pairs extends SubgraphExplorer {
     const dayTimestamp = (dayjs().utc().startOf('day').unix() - 24 * 60 * 60) * 1000;
     // 2 days before
     const prevDayTimestamp = dayTimestamp - 24 * 60 * 60 * 1000;
+    const sortedByTimestampAsc = data.dayData
+      .map(dayData => this.formatPairDayData(dayData))
+      .sort((a, b) => a.timestamp - b.timestamp);
 
-    const dayData = normalizeDayData(
-      data.dayData
-        .map(dayData => this.formatPairDayData(dayData))
-        .sort((a, b) => a.timestamp - b.timestamp)
-    );
+    const dayData = normalizeDayData(sortedByTimestampAsc);
 
     const totalLiquidity = Number(data.reserveUSD ?? 0);
     const reserve0 = Number(data.reserve0 ?? 0);
@@ -305,6 +308,30 @@ class Pairs extends SubgraphExplorer {
     };
   }
 };
+
+class Factory extends SubgraphExplorer {
+  async getVolumeDayData(vars) {
+    try {
+      const data = await this.request(OverviewFactoryDailyVolume, vars);
+
+      const sortedByTimestampAsc = data.factoryDayDatas
+      .map(dayData => this.formatVolumeDayData(dayData))
+      .sort((a, b) => a.timestamp - b.timestamp);
+
+      return normalizeDayData(sortedByTimestampAsc, ['value']);
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  formatVolumeDayData(dayData) {
+    return {
+      timestamp: +dayData.timestamp * 1000,
+      value: +dayData.dailyVolumeUSD,
+    };
+  }
+}
 
 class Transactions extends SubgraphExplorer {
   async getTransactions(vars) {
@@ -413,4 +440,5 @@ class Search extends SubgraphExplorer {
 export const TokensExplorer = new Tokens();
 export const PairsExplorer = new Pairs();
 export const TransactionsExplorer = new Transactions();
+export const FactoryExplorer = new Factory();
 export const SearchExplorer = new Search();
