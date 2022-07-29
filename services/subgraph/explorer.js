@@ -122,6 +122,7 @@ class Tokens extends SubgraphExplorer {
     let tradeVolumeWeek = 0;
     let tradeVolumeWeekPrev = 0;
     let tradeVolumeWeekChange = 0;
+    let totalLiquidityDayPrev = 0;
 
     for (let i = 0; i < dayData.length; i++) {
       const item = dayData[i];
@@ -140,14 +141,14 @@ class Tokens extends SubgraphExplorer {
 
       if (item.timestamp === prevDayTimestamp) {
         tradeVolumeDayPrev += tradeVolume;
+        totalLiquidityDayPrev += item.totalLiquidity;
       } else if (item.timestamp >= dayTimestamp) {
         const lastPrice = item.price;
-        const lastTotalLiquidity = item.totalLiquidity;
 
         tradeVolumeDay += tradeVolume;
         transactionsDay += transactions;
         priceChange = calcChange(price, lastPrice);
-        totalLiquidityChange = calcChange(totalLiquidity, lastTotalLiquidity);
+        totalLiquidityChange = calcChange(totalLiquidity, totalLiquidityDayPrev);
         tradeVolumeDayChange = calcChange(tradeVolumeDay, tradeVolumeDayPrev);
         tradeVolumeWeekChange = calcChange(tradeVolumeWeek, tradeVolumeWeekPrev);
       }
@@ -239,11 +240,12 @@ class Pairs extends SubgraphExplorer {
     let tradeVolumeWeek = 0;
     let tradeVolumeWeekPrev = 0;
     let tradeVolumeWeekChange = 0;
-
-    let totalLiquidityChange = 0;
+    let totalLiquidityDayPrev = 0;
 
     let transactionsDay = 0;
     let transactionsWeek = 0;
+
+    let totalLiquidityChange = 0;
 
     for (let i = 0; i < dayData.length; i++) {
       const item = dayData[i];
@@ -261,13 +263,12 @@ class Pairs extends SubgraphExplorer {
       }
 
       if (item.timestamp === prevDayTimestamp) {
+        totalLiquidityDayPrev += item.totalLiquidity;
         tradeVolumeDayPrev += tradeVolume;
       } else if (item.timestamp >= dayTimestamp) {
-        const lastTotalLiquidity = item.totalLiquidity;
-
         tradeVolumeDay += tradeVolume;
         transactionsDay += transactions;
-        totalLiquidityChange = calcChange(totalLiquidity, lastTotalLiquidity);
+        totalLiquidityChange = calcChange(totalLiquidity, totalLiquidityDayPrev);
         tradeVolumeDayChange = calcChange(tradeVolumeDay, tradeVolumeDayPrev);
         tradeVolumeWeekChange = calcChange(tradeVolumeWeek, tradeVolumeWeekPrev);
       }
