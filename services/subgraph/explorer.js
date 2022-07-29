@@ -16,7 +16,9 @@ const calcChange = (current, last) => {
   return divider !== 0 ? (current - last) * 100 / divider : 0;
 };
 
-const normalizeDayData = (dayData, overrideFields = ['tradeVolume', 'totalTransactions']) => {
+export const sortByTimestampAsc = (dayData) => [...dayData].sort((a, b) => a.timestamp - b.timestamp);
+
+export const normalizeDayData = (dayData, overrideFields = []) => {
   if (!dayData.length) return [];
 
   const buffer = [];
@@ -102,11 +104,9 @@ class Tokens extends SubgraphExplorer {
     // 2 days before
     const prevDayTimestamp = dayTimestamp - 24 * 60 * 60 * 1000;
 
-    const sortedByTimestampAsc = data.dayData
-    .map(dayData => this.formatTokenDayData(dayData))
-    .sort((a, b) => a.timestamp - b.timestamp);
+    const sortedByTimestampAsc = sortByTimestampAsc(data.dayData.map(dayData => this.formatTokenDayData(dayData)));
 
-    const dayData = normalizeDayData(sortedByTimestampAsc);
+    const dayData = normalizeDayData(sortedByTimestampAsc, ['tradeVolume', 'totalTransactions']);
 
     const price = Number(data.derivedUSD);
     const totalLiquidity = Number(data.totalLiquidity) * price;
@@ -222,11 +222,9 @@ class Pairs extends SubgraphExplorer {
     const dayTimestamp = (dayjs().utc().startOf('day').unix() - 24 * 60 * 60) * 1000;
     // 2 days before
     const prevDayTimestamp = dayTimestamp - 24 * 60 * 60 * 1000;
-    const sortedByTimestampAsc = data.dayData
-      .map(dayData => this.formatPairDayData(dayData))
-      .sort((a, b) => a.timestamp - b.timestamp);
+    const sortedByTimestampAsc = sortByTimestampAsc(data.dayData.map(dayData => this.formatPairDayData(dayData)));
 
-    const dayData = normalizeDayData(sortedByTimestampAsc);
+    const dayData = normalizeDayData(sortedByTimestampAsc, ['tradeVolume', 'totalTransactions']);
 
     const totalLiquidity = Number(data.reserveUSD ?? 0);
     const reserve0 = Number(data.reserve0 ?? 0);
@@ -315,9 +313,7 @@ class Factory extends SubgraphExplorer {
     try {
       const data = await this.request(OverviewFactoryDailyVolume, vars);
 
-      const sortedByTimestampAsc = data.factoryDayDatas
-      .map(dayData => this.formatVolumeDayData(dayData))
-      .sort((a, b) => a.timestamp - b.timestamp);
+      const sortedByTimestampAsc = sortByTimestampAsc(data.factoryDayDatas.map(dayData => this.formatVolumeDayData(dayData)));
 
       return normalizeDayData(sortedByTimestampAsc, ['value']);
     } catch (error) {
@@ -327,9 +323,11 @@ class Factory extends SubgraphExplorer {
   }
 
   formatVolumeDayData(dayData) {
+    const volumeUntracked = +dayData.dailyVolumeUntracked;
+    const volumeTracked = +dayData.dailyVolumeUSD;
     return {
       timestamp: +dayData.timestamp * 1000,
-      value: +dayData.dailyVolumeUSD,
+      value: volumeTracked + volumeUntracked,
     };
   }
 }

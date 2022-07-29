@@ -61,7 +61,7 @@
 import dayjs from 'dayjs';
 
 import SubgraphClient from '@/services/subgraph/client';
-import { TokensExplorer, PairsExplorer, TransactionsExplorer, FactoryExplorer } from '@/services/subgraph/explorer';
+import { TokensExplorer, PairsExplorer, TransactionsExplorer, FactoryExplorer, sortByTimestampAsc, normalizeDayData } from '@/services/subgraph/explorer';
 
 import { PairDayDatas } from '@/services/subgraph/query/factory';
 import { DateTags } from '@/consts';
@@ -243,7 +243,10 @@ export default {
       try {
         this.factoryTotalLiquidityDataLoading = true;
         const { data: { pairDayDatas } } = await SubgraphClient.query(PairDayDatas).toPromise();
-        this.factoryTotalLiquidityData = groupPairDayDatas(pairDayDatas);
+        const dayData = groupPairDayDatas(pairDayDatas);
+        const sorted = sortByTimestampAsc(dayData);
+        const normalized = normalizeDayData(sorted);
+        this.factoryTotalLiquidityData = normalized;
       } catch (error) {
         console.error(error);
         this.factoryTotalLiquidityData = [];

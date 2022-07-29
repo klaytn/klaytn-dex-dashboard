@@ -5,6 +5,7 @@ query OverviewFactoryDailyVolume {
   factoryDayDatas(orderBy: timestamp, orderDirection: desc) {
     timestamp
     dailyVolumeUSD
+    dailyVolumeUntracked
   }
 }
 `
