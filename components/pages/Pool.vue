@@ -247,7 +247,7 @@ export default {
     },
 
     valueFormatter() {
-      return (v) => `$${formatAmount(v.value)}`;
+      return (v) => `$${formatAmount(v.value, 4)}`;
     },
     timeFormatter() {
       return (v) => dayjs(v.timestamp).format('MMM DD, YYYY');

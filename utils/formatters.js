@@ -1,4 +1,4 @@
-export const formatAmount = (amount) => {
+export const formatAmount = (amount, decimals = 2) => {
   const val = Number(amount);
 
   if (Math.trunc(val / 1_000_000) > 0) {
@@ -7,7 +7,7 @@ export const formatAmount = (amount) => {
     return `${(val / 1_000).toFixed(2)}K`;
   }
 
-  return String(val.toFixed(2));
+  return String(val.toFixed(decimals));
 };
 
 export const formatAddress = (address, length = address.length / 2) => {
