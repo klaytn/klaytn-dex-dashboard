@@ -15,6 +15,7 @@
         <slot v-bind="{ startIndex }" />
       </el-table>
       <el-pagination
+        v-if="total"
         class="ui-pagination"
         layout="slot"
         :current-page="page"
