@@ -1,17 +1,4 @@
-# Klaytn-DEX Project
-
-Open-source DEX based on Klaytn
-
-## Checklist
-
-- [ ] PR 리뷰어로 등록될 프로젝트 담당 개발자 지정 `.github/CODEOWNERS`
-- [ ] 테스트 구성 (unit, lint, coverage, integration, e2e, sanity)
-- [ ] (Optional) example-Dockerfile 참고하여 Dockerfile 작성
-- [ ] branch policy 설정(Dev, Master) 확인
-- [ ] CI/CD Pipeline 설정
-- [ ] example-REAME.md 참고하여 README 작성 
-
-# Klaytn-DEX
+# klaytn
 
 ## Build Setup
 

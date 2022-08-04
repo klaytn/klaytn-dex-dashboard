@@ -2,9 +2,10 @@ import { gql } from '@urql/core';
 
 export const OverviewFactoryDailyVolume = gql`
 query OverviewFactoryDailyVolume {
-  factoryDayDatas {
+  factoryDayDatas(orderBy: timestamp, orderDirection: desc) {
     timestamp
     dailyVolumeUSD
+    dailyVolumeUntracked
   }
 }
 `

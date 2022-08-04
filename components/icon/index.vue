@@ -1,8 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-v-html -->
-  <div>
-    <div class="svg-icon" v-html="require(`@/assets/svg/${name}.svg?raw`)" />
-  </div>
+  <span class="svg-icon" v-html="require(`@/assets/svg/${name}.svg?raw`)" />
   <!--eslint-enable-->
 </template>
 
@@ -14,3 +12,10 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.svg-icon {
+  display: flex;
+  align-items: center;
+}
+</style>

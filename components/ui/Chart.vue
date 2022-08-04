@@ -1,5 +1,5 @@
 <template>
-  <ui-card class="ui-chart-card">
+  <ui-card :class="['ui-chart-card', { transparent }]">
     <div class="ui-chart-data">
       <div class="ui-chart-title" v-if="selectedData">
         <div class="ui-chart-title__secondary">{{ title }}</div>
@@ -45,6 +45,9 @@ export default {
       type: Function,
       default: (v) => v,
     },
+    transparent: {
+      type: Boolean,
+    },
   },
   data() {
     return {
@@ -55,7 +58,10 @@ export default {
 
   watch: {
     data: {
-      handler: 'resetHighlight'
+      handler: function() {
+        this.resetHighlight();
+        this.onResize();
+      }
     },
   },
 
@@ -94,12 +100,20 @@ export default {
 
 <style lang="scss">
 .ui-chart {
-  height: 400px;
+  height: 100%;
+  min-height: 400px;
   width: 100%;
+  max-width: 100%;
 
   &-card {
-    padding: 16px 0;
+    height: 100%;
+    padding: 16px;
     position: relative;
+
+    &.ui-card.transparent {
+      background: transparent;
+      box-shadow: none;
+    }
   }
 
   &-data {

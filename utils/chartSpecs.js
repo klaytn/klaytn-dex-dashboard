@@ -1,14 +1,19 @@
 import dayjs from 'dayjs';
 import { graphic } from 'echarts';
 
-export const factoryTvlChartSpec = (chartData) => ({
+export const lineChartSpec = (chartData) => ({
+  grid: {
+    left: 10,
+    right: 10,
+    bottom: 20,
+  },
   xAxis: {
     type: 'category',
     boundaryGap: false,
     data: chartData.map(item => item.timestamp),
     axisLabel: {
       formatter(value) {
-        return dayjs(+value).format('DD MMM')
+        return dayjs(+value).format('DD')
       }
     },
     axisPointer: {
@@ -61,9 +66,14 @@ export const factoryTvlChartSpec = (chartData) => ({
   ],
 });
 
-export const factoryVolumeChartSpec = (chartData, formatter = (value) => value) => ({
+export const barChartSpec = (chartData, formatter = (value) => value) => ({
+  grid: {
+    left: 20,
+    right: 20,
+    bottom: 20,
+  },
   xAxis: {
-    data: chartData.map(item => item.start),
+    data: chartData.map(item => item.timestamp),
     axisLabel: {
       formatter
     },
