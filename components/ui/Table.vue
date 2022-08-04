@@ -1,27 +1,33 @@
 <template>
-  <ui-card>
-    <el-table
-      :data="items"
-      size="big"
-      v-bind="$attrs"
-      v-on="$listeners"
-      style="width: 100%"
-      class="ui-table"
-    >
-      <slot v-bind="{ startIndex }" />
-    </el-table>
-    <el-pagination
-      class="ui-pagination"
-      layout="slot"
-      :current-page="page"
-      :page-size="pageSize"
-      :total="total"
-    >
-      <icon class="ui-pagination-control ui-pagination-control--prev" name="union" @click.native="handlePrev" />
-      <div class="ui-pagination-page">Page {{ page }} of {{ pages }}</div>
-      <icon class="ui-pagination-control ui-pagination-control--next" name="union" @click.native="handleNext" />
-    </el-pagination>
-  </ui-card>
+  <collapse class="ui-table-collapse">
+    <template #head>
+      <slot name="head" />
+    </template>
+    <ui-card v-loading="loading">
+      <el-table
+        :data="items"
+        size="big"
+        v-bind="$attrs"
+        v-on="$listeners"
+        style="width: 100%"
+        class="ui-table"
+      >
+        <slot v-bind="{ startIndex }" />
+      </el-table>
+      <el-pagination
+        v-if="total"
+        class="ui-pagination"
+        layout="slot"
+        :current-page="page"
+        :page-size="pageSize"
+        :total="total"
+      >
+        <icon class="ui-pagination-control ui-pagination-control--prev" name="union" @click.native="handlePrev" />
+        <div class="ui-pagination-page">Page {{ page }} of {{ pages }}</div>
+        <icon class="ui-pagination-control ui-pagination-control--next" name="union" @click.native="handleNext" />
+      </el-pagination>
+    </ui-card>
+  </collapse>
 </template>
 
 <script>
@@ -31,7 +37,11 @@ export default {
   props: {
     data: {
       type: Array,
-      required: true,
+      default: () => ([]),
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
     pageSize: {
       type: Number,
@@ -75,6 +85,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 8px 0px;
+  margin: auto;
   min-height: 48px;
   font-size: 16px;
   line-height: 19px;
@@ -99,6 +110,45 @@ export default {
 }
 
 .ui-table {
+  @media screen and (max-width: $screen-md) {
+    thead {
+      display: block;
+
+      tr {
+        padding: 0;
+      }
+
+      th:not(.visible) {
+        display: none;
+      }
+    }
+
+    table, tbody, tr, td {
+      display: block;
+      width: initial !important;
+    }
+
+    tr {
+      padding: 16px 0px;
+
+      & + tr {
+        border-top: 2px solid $gray3;
+      }
+    }
+
+    &.el-table {
+      th.el-table__cell.is-leaf,
+      td.el-table__cell {
+        border-bottom: none;
+        padding: 6px 0px;
+      }
+    }
+
+    .screen-md {
+      display: none;
+    }
+  }
+
   th {
     color: $gray4;
     font-weight: 500;
@@ -116,7 +166,37 @@ export default {
   }
 
   .cell {
+    display: flex;
+    align-items: center;
     min-height: 24px;
+
+    &-data {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      @media screen and (max-width: $screen-md) {
+        flex: 1;
+      }
+
+      &:before {
+        content: attr(data-label)"";
+
+        display: none;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 15px;
+        color: $gray4;
+
+        @media screen and (max-width: $screen-md) {
+          display: inline-block;
+        }
+      }
+    }
+
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
   }
 
   &.el-table {
@@ -124,6 +204,22 @@ export default {
     th.el-table__cell > .cell {
       padding-left: 24px;
       padding-right: 24px;
+
+      @media screen and (max-width: $screen-md) {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+    }
+  }
+
+  &-collapse {
+    @media screen and (max-width: $screen-md) {
+      background: $white;
+      border-radius: 16px;
+
+      .collapse--head {
+        padding: 0px 16px;
+      }
     }
   }
 }
