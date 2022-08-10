@@ -8,6 +8,7 @@ const SubgraphClient = createClient({
   url: process.env.subgraphEndpoint,
   // the default:
   exchanges: defaultExchanges,
+  requestPolicy: 'network-only',
 });
 
 export default SubgraphClient;
