@@ -2,6 +2,8 @@
 
 ## Build Setup
 
+### Using command line
+
 ```bash
 # install dependencies
 $ npm install
@@ -16,6 +18,12 @@ $ npm run start
 # generate static project
 $ npm run generate
 ```
+
+### Using docker-compose
+```
+$ docker-compose --env-file=.env.example up -d
+```
+
 
 For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
 
