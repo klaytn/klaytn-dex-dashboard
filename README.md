@@ -75,3 +75,12 @@ More information about the usage of this directory in [the documentation](https:
 This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
 
 More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+
+
+## Want to Contribute to Klaytn DEX Dashboard? <a id="want-to-contribute"></a>
+
+In line with our commitment to decentralization, all Klaytn codebase and its documentations are completely open source. Klaytn always welcomes your contribution. Anyone can view, edit, fix its contents and make suggestions. If you have any idea to improve the existing dashboard, You can either create a pull request on GitHub or create a enhancement request. Make sure to sign our [Contributor License Agreement (CLA)](https://cla-assistant.io/klaytn/klaytn-dex-dashboard) first and there are also a few guidelines our contributors would check out before contributing:
+
+- [Contribution Guide](./CONTRIBUTING.md)
+- [License](./LICENSE)
+- [Code of Conducts](./code-of-conduct.md)
