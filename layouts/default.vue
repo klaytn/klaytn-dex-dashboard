@@ -2,10 +2,10 @@
   <main class="layout">
     <header>
       <div class="col">
-        <a href="#" class="app-logo">
-          <span class="app-logo-icon"></span>
-          <span>DEX Charts</span>
-        </a>
+        <div class="app-logo">
+          <a :href="swapLink" class="app-logo-icon" />
+          <NuxtLink class="app-logo-title" to="/">DEX Charts</NuxtLink>
+        </div>
       </div>
       <div class="col col-center">
         <Menu :items="links"></Menu>
@@ -27,6 +27,8 @@
 
 <script>
 import { SearchExplorer } from '@/services/subgraph/explorer';
+
+import { ExchangeExplorer } from '@/utils/explorer';
 
 export default {
   name: "KlayView",
@@ -58,6 +60,9 @@ export default {
           link: "/tokens",
         },
       ]
+    },
+    swapLink() {
+      return ExchangeExplorer.swapLink(this.token0Id, this.token1Id);
     },
   },
   methods: {
@@ -152,13 +157,14 @@ export default {
     height: 24px;
     border-radius: 50%;
     background: $dark2;
+  }
 
-    & + span {
-      margin-left: 6px;
+  &-title {
+    margin-left: 6px;
+    color: $dark2;
 
-      @media screen and (max-width: $screen-md) {
-        display: none;
-      }
+    @media screen and (max-width: $screen-md) {
+      display: none;
     }
   }
 }
