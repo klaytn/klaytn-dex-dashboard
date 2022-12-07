@@ -18,5 +18,5 @@ RUN SUBGRAPH_ENDPOINT=$SUBGRAPH_ENDPOINT \
     EXPLORER_ENDPOINT=$EXPLORER_ENDPOINT \
     EXCHANGE_ENDPOINT=$EXCHANGE_ENDPOINT yarn build
 
-FROM nginxinc/nginx-unprivileged:1.23
+FROM nginxinc/nginx-unprivileged:1.23-alpine
 COPY --from=build /app/dist /usr/share/nginx/html
