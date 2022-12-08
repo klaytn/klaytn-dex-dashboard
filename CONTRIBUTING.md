@@ -5,7 +5,7 @@ Thank you for your interest in contributing to Klaytn. As an open source project
 ## How to Contribute on Klaytn 
 
 1. Read this [contributing document](./CONTRIBUTING.md).
-2. Sign [Contributor Licensing Agreement (CLA)](#contributor-license-agreement-cla).
+2. Read [Contributor Licensing Agreement (CLA)](#contributor-license-agreement-cla).
 3. Submit an issue with a proper [labelling](#usage-of-labels).
 4. Please wait until the label changes to `contribution welcome` - otherwise, it is not ready to be worked on.
 5. Only after the label changed to `contribution welcome`, you can start submitting the changes. To avoid any duplicate efforts, it is recommended to update the issue so that other contributors could see someone working on the issue.
@@ -92,6 +92,6 @@ Formatting errors can be easily fixed by running `npm run lintfix`.
 
 ## Contributor License Agreement (CLA)
 
-Keep in mind when you submit your pull request, you'll need to sign the CLA via [CLA-Assistant](https://cla-assistant.io/klaytn/klaytn-dex-dashboard) for legal purposes. You will have to sign the CLA just one time, either as an individual or corporation.
+Keep in mind when you submit your pull request, you'll need to read the [CLA](https://gist.github.com/e78f99e1c527225637e269cff1bc7e49) document and sign by posting "I have read the CLA Document and I hereby sign the CLA" in the comment of PR for legal purposes. You will have to sign the CLA just one time, either as an individual or corporation.
 
 You will be prompted to sign the agreement by CLA Assistant (bot) when you open a Pull Request for the first time.
