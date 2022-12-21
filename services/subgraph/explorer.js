@@ -155,10 +155,6 @@ class Tokens extends SubgraphExplorer {
       }
     }
 
-    console.log({
-      priceChange,
-    })
-
     return {
       id: data.id,
       name: data.name,
