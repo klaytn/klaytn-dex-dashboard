@@ -4,15 +4,15 @@ class Explorer {
   }
 
   contractLink(address) {
-    return `${this.url}account/${address}`;
+    return `${this.url}/account/${address}`;
   }
 
   transactionLink(address) {
-    return `${this.url}tx/${address}`;
+    return `${this.url}/tx/${address}`;
   }
 
   accountLink(address) {
-    return `${this.url}account/${address}`;
+    return `${this.url}/account/${address}`;
   }
 }
 
@@ -25,14 +25,14 @@ class AppExplorer {
     const params = [address1, address2].filter(Boolean);
     const path = params.length ? params.join('/') : '';
 
-    return `${this.url}liquidity/add/${path}`;
+    return `${this.url}/liquidity/add/${path}`;
   }
 
   swapLink(address1, address2 = '') {
     const input = address1 ? `inputCurrency=${address1}` : '';
     const output = address2 ? `&outputCurrency=${address2}` : '';
 
-    return `${this.url}swap?${input}${output}`;
+    return `${this.url}/swap?${input}${output}`;
   }
 }
 
