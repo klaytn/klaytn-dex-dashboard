@@ -13,3 +13,7 @@ export const formatAmount = (amount, decimals = 2) => {
 export const formatAddress = (address, length = address.length / 2) => {
   return `${address.slice(0, length / 2)}...${address.slice(-length / 2)}`;
 };
+
+export const trimTrailingSlash = (str) => {
+  return str.replace(/\/$/, '');
+};

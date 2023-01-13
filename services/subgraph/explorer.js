@@ -99,9 +99,9 @@ class Tokens extends SubgraphExplorer {
     const weekTimestamp = (dayjs().utc().startOf('day').unix() - 7 * 24 * 60 * 60) * 1000;
     // 14 days before
     const prevWeekTimestamp = weekTimestamp - 7 * 24 * 60 * 60 * 1000;
+    // this day
+    const dayTimestamp = dayjs().utc().startOf('day').unix() * 1000;
     // 1 day before
-    const dayTimestamp = (dayjs().utc().startOf('day').unix() - 24 * 60 * 60) * 1000;
-    // 2 days before
     const prevDayTimestamp = dayTimestamp - 24 * 60 * 60 * 1000;
 
     const sortedByTimestampAsc = sortByTimestampAsc(data.dayData.map(dayData => this.formatTokenDayData(dayData)));
@@ -124,6 +124,8 @@ class Tokens extends SubgraphExplorer {
     let tradeVolumeWeekChange = 0;
     let totalLiquidityDayPrev = 0;
 
+    let pricePrevDay = 0;
+
     for (let i = 0; i < dayData.length; i++) {
       const item = dayData[i];
 
@@ -142,12 +144,11 @@ class Tokens extends SubgraphExplorer {
       if (item.timestamp === prevDayTimestamp) {
         tradeVolumeDayPrev += tradeVolume;
         totalLiquidityDayPrev += item.totalLiquidity;
-      } else if (item.timestamp >= dayTimestamp) {
-        const lastPrice = item.price;
-
+        pricePrevDay = item.price;
+      } else if (item.timestamp === dayTimestamp) {
         tradeVolumeDay += tradeVolume;
         transactionsDay += transactions;
-        priceChange = calcChange(price, lastPrice);
+        priceChange = calcChange(price, pricePrevDay);
         totalLiquidityChange = calcChange(totalLiquidity, totalLiquidityDayPrev);
         tradeVolumeDayChange = calcChange(tradeVolumeDay, tradeVolumeDayPrev);
         tradeVolumeWeekChange = calcChange(tradeVolumeWeek, tradeVolumeWeekPrev);
